@@ -1,3 +1,5 @@
+import "./autoload.js";
+
 import { createClearCommand } from "./commands/clear/index.js";
 import { createDownloadCommand } from "./commands/download/index.js";
 import { createWorkflowBaseCommand } from "./commands/index.js";
