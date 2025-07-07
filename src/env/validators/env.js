@@ -1,4 +1,4 @@
-import "../autoload.js";
+import "../__autoload.js";
 
 import { Experimental } from "@srhenry/type-utils";
 import { EnvSchema } from "../schemas/EnvSchema.js";
