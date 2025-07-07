@@ -8,8 +8,6 @@ const autoloadFiles = readdirSync(resolve(import.meta.dirname, "../"), {
     .filter((entry) => entry.isFile())
     .filter((file) => /^__autoload\.[cm]?js$/g.test(file.name));
 
-console.log({ files: autoloadFiles });
-
 for (const file of autoloadFiles) {
     await import(resolve(file.parentPath, file.name));
 }
