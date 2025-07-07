@@ -1,5 +1,6 @@
-export const ROOT_PATH = "/home/srhenry/Músicas";
-export const THUMBNAILS_PATH = "/mnt/d/Músicas/Thumbnails";
+import { Env } from "../env/index.js";
+
+export const { ROOT_PATH, THUMBNAILS_PATH } = Env;
 
 export default {
     ROOT_PATH,
