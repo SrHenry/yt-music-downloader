@@ -1,0 +1,3 @@
+rm -rf *.flac
+rm -rf ./out/**/*
+rm -rf ./temp/**/*

@@ -1,0 +1,4 @@
+echo "Music: $1 \n"
+echo "Thumbnail: $2 \n"
+
+ffmpeg -i "$1" -i "$2" -map 0:a -map 1 -codec copy -metadata:s:v title="Album cover" -metadata:s:v comment="Cover (front)" -disposition:v attached_pic "out/$1"

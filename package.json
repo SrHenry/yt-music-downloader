@@ -1,0 +1,26 @@
+{
+    "name": "workflow",
+    "private": true,
+    "version": "0.0.1",
+    "engines": {
+        "node": ">=20.0.0 <21 || >=22.0.0 <23 || >=24.0.0 <25"
+    },
+    "main": "src/workflow.js",
+    "bin": {
+        "workflow": "src/workflow.js"
+    },
+    "scripts": {
+        "workflow": "src/workflow.js"
+    },
+    "type": "module",
+    "devDependencies": {
+        "@eslint/js": "^9.30.1",
+        "eslint": "^9.30.1",
+        "globals": "^16.3.0"
+    },
+    "dependencies": {
+        "@srhenry/type-utils": "^0.5.0",
+        "chalk": "^5.4.1",
+        "commander": "^14.0.0"
+    }
+}
