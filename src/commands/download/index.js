@@ -34,7 +34,6 @@ export { sources as sourcesArgument };
 /**
  *
  * @param {import('commander').Command} program
- * @returns {import('commander').Command}
  */
 export function createDownloadCommand(program) {
     const download = program.command("download");
@@ -46,5 +45,5 @@ export function createDownloadCommand(program) {
         .addArgument(sources)
         .action(downloadAction);
 
-    return download;
+    return program;
 }
