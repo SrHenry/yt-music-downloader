@@ -4,11 +4,13 @@ import { createClearCommand } from "./commands/clear/index.js";
 import { createDownloadCommand } from "./commands/download/index.js";
 import { createWorkflowBaseCommand } from "./commands/index.js";
 
-const workflow = createWorkflowBaseCommand();
+import { Experimental } from "@srhenry/type-utils";
 
-createClearCommand(workflow);
-createDownloadCommand(workflow);
+const { pipeline } = Experimental;
 
-// runWorkflow();
-
-workflow.parse();
+pipeline()
+    .pipe(() => createWorkflowBaseCommand())
+    .pipe(createClearCommand())
+    .pipe(createDownloadCommand())
+    .depipe()
+    .parse();

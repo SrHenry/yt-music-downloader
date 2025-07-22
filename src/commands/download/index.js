@@ -31,19 +31,20 @@ export async function downloadAction(sources) {
 
 export { sources as sourcesArgument };
 
-/**
- *
- * @param {import('commander').Command} program
- */
-export function createDownloadCommand(program) {
-    const download = program.command("download");
+export const createDownloadCommand =
+    () =>
+    /**
+     * @param {import('commander').Command} program
+     */
+    (program) => {
+        const download = program.command("download");
 
-    download
-        .description(
-            "downloads music from a list of YouTube URLs or Content IDs"
-        )
-        .addArgument(sources)
-        .action(downloadAction);
+        download
+            .description(
+                "downloads music from a list of YouTube URLs or Content IDs"
+            )
+            .addArgument(sources)
+            .action(downloadAction);
 
-    return program;
-}
+        return program;
+    };
