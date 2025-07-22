@@ -103,10 +103,10 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/retry/-/retry-0.4.2.tgz#1860473de7dfa1546767448f333db80cb0ff2161"
   integrity sha512-xeO57FpIu4p1Ri3Jq/EXq4ClRm86dVF2z/+kvFnyqVYRavTZmaFaUBbWCOuuTh0o/g7DSsk6kc2vrS4Vl5oPOQ==
 
-"@srhenry/type-utils@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@srhenry/type-utils/-/type-utils-0.5.0.tgz#3e769a4034d23661aae7b8bff33a6a6a9888d37c"
-  integrity sha512-7nueQGlCFCdHQ1OpKhl79zwMJaRj1YNY/IGzUL7t5ReE+Xwg5ZVqrA6znlT4PUZVrAb0VoJYgNG4fS3IvUzRAQ==
+"@srhenry/type-utils@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@srhenry/type-utils/-/type-utils-0.5.1.tgz#6f510acf4c047fc757cd98972e0c106e9a32f747"
+  integrity sha512-WVhxWDInEE0Q7smc9CJY6KqfIYBzH4I3V6u87JakFDtktL0I6mNKYsQRPXZzSUUKSS0f+AiW+cnF3v4qyIDVgw==
   dependencies:
     "@types/node" "^24.0.10"
     reflect-metadata "^0.2.2"
