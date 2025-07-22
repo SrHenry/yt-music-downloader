@@ -21,3 +21,7 @@ declare interface Thumbnail {
 
 /** Thumbnails collection */
 declare type Thumbnails = Thumbnail[];
+
+declare type Prettify<T> = {
+    [K in keyof T]: T[K]
+} & {};
