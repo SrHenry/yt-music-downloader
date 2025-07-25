@@ -2,11 +2,15 @@ import { Experimental } from "@srhenry/type-utils";
 
 import { __root__ } from "../../../__root__.js";
 import { extractFullPath } from "../../../shared/functions/extractFullPath.js";
+import { $do } from "../../../shared/pipelines/do.js";
 import { listDir } from "../../../shared/pipelines/listDir.js";
+import { logExceptions } from "../../../shared/pipelines/logExceptions.js";
+import { printMessage } from "../../../shared/pipelines/printMessage.js";
 import { removeFiles } from "../../../shared/pipelines/removeFiles.js";
 import { split } from "../../../shared/pipelines/split.js";
 import { trimList as trim } from "../../../shared/pipelines/trimList.js";
 import { useFilters } from "../../../shared/pipelines/useFilters.js";
+import { countSucessfullyRemoved } from "../../_shared/pipelines/countSucessfullyRemoved.js";
 import { validate } from "./pipelines/Options/validate.js";
 
 /**
@@ -48,6 +52,9 @@ export const clearMusic =
             .pipeAsync(useFilters([filter]))
             .pipeAsync(getPaths())
             .pipeAsync(removeFiles())
+            .pipeAsync($do(logExceptions("Error while deleting files: %s")))
+            .pipeAsync(countSucessfullyRemoved())
+            .pipeAsync(printMessage("Removed :{count} music files."))
             .depipe();
 
 /** @param {import('commander').OptionValues} options */

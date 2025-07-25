@@ -6,10 +6,14 @@ import { Experimental } from "@srhenry/type-utils";
 
 import { __root__ } from "../../../__root__.js";
 import { extractFullPath } from "../../../shared/functions/extractFullPath.js";
+import { $do } from "../../../shared/pipelines/do.js";
 import { listDir } from "../../../shared/pipelines/listDir.js";
+import { logExceptions } from "../../../shared/pipelines/logExceptions.js";
 import { map } from "../../../shared/pipelines/map.js";
+import { printMessage } from "../../../shared/pipelines/printMessage.js";
 import { removeFiles } from "../../../shared/pipelines/removeFiles.js";
 import { useFilters } from "../../../shared/pipelines/useFilters.js";
+import { countSucessfullyRemoved } from "../../_shared/pipelines/countSucessfullyRemoved.js";
 import { parse } from "./pipelines/Options/parse.js";
 import { validate } from "./pipelines/Options/validate.js";
 
@@ -97,6 +101,9 @@ const clearLogs =
             .pipeAsync(filterStatsOlderThan(time))
             .pipeAsync(map(fileToPath()))
             .pipeAsync(removeFiles())
+            .pipeAsync($do(logExceptions("Error while deleting logs: %s")))
+            .pipeAsync(countSucessfullyRemoved())
+            .pipeAsync(printMessage(`Removed :{count} log files.`))
             .depipe();
 
 /** @param {import('commander').OptionValues} options */
