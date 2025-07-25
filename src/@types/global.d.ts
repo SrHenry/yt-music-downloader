@@ -23,5 +23,15 @@ declare interface Thumbnail {
 declare type Thumbnails = Thumbnail[];
 
 declare type Prettify<T> = {
-    [K in keyof T]: T[K]
+    [K in keyof T]: T[K];
 } & {};
+
+declare type TypeOfTag =
+    | "undefined"
+    | "boolean"
+    | "string"
+    | "number"
+    | "bigint"
+    | "symbol"
+    | "object"
+    | "function";
