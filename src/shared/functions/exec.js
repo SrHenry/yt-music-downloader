@@ -10,7 +10,7 @@ import { execAsync } from "./execAsync.js";
  *
  * @throws {Error}
  */
-export async function run(command, ...args) {
+export async function exec(command, ...args) {
     const { stdout, stderr } = await execAsync([command, ...args].join(" "));
 
     if (stderr) throw new Error(stderr.trimEnd());

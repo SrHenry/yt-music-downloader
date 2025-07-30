@@ -1,4 +1,4 @@
-import { run } from "../shared/functions/run.js";
+import { exec } from "../shared/functions/exec.js";
 
 /**
  * Runs ffmpeg in the shell and returns the output.
@@ -11,7 +11,7 @@ import { run } from "../shared/functions/run.js";
  */
 export async function runFFmpeg(...args) {
     try {
-        return await run("ffmpeg", ...args);
+        return await exec("ffmpeg", ...args);
     } catch ({ message }) {
         return message;
     }

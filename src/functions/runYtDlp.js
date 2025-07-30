@@ -1,4 +1,4 @@
-import { run } from "../shared/functions/run.js";
+import { exec } from "../shared/functions/exec.js";
 
 /**
  * Runs yt-dlp in the shell and returns the output. Throws an error if the command fails.
@@ -10,5 +10,5 @@ import { run } from "../shared/functions/run.js";
  * @throws {Error}
  */
 export function runYtDlp(...args) {
-    return run("yt-dlp", ...args);
+    return exec("yt-dlp", ...args);
 }
