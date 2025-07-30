@@ -1,4 +1,4 @@
-import "./__autoload.js";
+import "./__autoload.ts";
 
-/** @type {import('./schemas/EnvSchema.js').EnvSchema>} */
+/** @type {import('./schemas/EnvSchema\.ts').EnvSchema>} */
 export const Env = process.env;

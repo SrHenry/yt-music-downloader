@@ -1,5 +1,5 @@
-import { clearLogsAction } from "./logs/index.js";
-import { clearMusicAction } from "./music/index.js";
+import { clearLogsAction } from "./logs/index.ts";
+import { clearMusicAction } from "./music/index.ts";
 
 export const createClearCommand =
     () =>

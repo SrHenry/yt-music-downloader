@@ -1,4 +1,4 @@
-import { runYtDlp } from "./runYtDlp.js";
+import { runYtDlp } from "./runYtDlp.ts";
 
 /**
  * Fetches the album name of a given YouTube source when available.

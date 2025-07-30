@@ -1,4 +1,4 @@
-import "../__autoload.js";
+import "../__autoload.ts";
 
 import { object, string } from "@srhenry/type-utils";
 

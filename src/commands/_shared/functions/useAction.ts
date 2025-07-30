@@ -1,4 +1,4 @@
-import { cast } from "../../../shared/functions/cast.js";
+import { cast } from "../../../shared/functions/cast.ts";
 
 /**
  * @typedef {() => void} NoArgsNoOptionsCommandAction

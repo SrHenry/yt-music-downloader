@@ -4,18 +4,18 @@ import { resolve } from "node:path";
 
 import { Experimental } from "@srhenry/type-utils";
 
-import { __root__ } from "../../../__root__.js";
-import { extractFullPath } from "../../../shared/functions/extractFullPath.js";
-import { $do } from "../../../shared/pipelines/do.js";
-import { listDir } from "../../../shared/pipelines/listDir.js";
-import { logExceptions } from "../../../shared/pipelines/logExceptions.js";
-import { map } from "../../../shared/pipelines/map.js";
-import { printMessage } from "../../../shared/pipelines/printMessage.js";
-import { removeFiles } from "../../../shared/pipelines/removeFiles.js";
-import { useFilters } from "../../../shared/pipelines/useFilters.js";
-import { countSucessfullyRemoved } from "../../_shared/pipelines/countSucessfullyRemoved.js";
-import { parse } from "./pipelines/Options/parse.js";
-import { validate } from "./pipelines/Options/validate.js";
+import { __root__ } from "../../../__root__.ts";
+import { extractFullPath } from "../../../shared/functions/extractFullPath.ts";
+import { $do } from "../../../shared/pipelines/do.ts";
+import { listDir } from "../../../shared/pipelines/listDir.ts";
+import { logExceptions } from "../../../shared/pipelines/logExceptions.ts";
+import { map } from "../../../shared/pipelines/map.ts";
+import { printMessage } from "../../../shared/pipelines/printMessage.ts";
+import { removeFiles } from "../../../shared/pipelines/removeFiles.ts";
+import { useFilters } from "../../../shared/pipelines/useFilters.ts";
+import { countSucessfullyRemoved } from "../../_shared/pipelines/countSucessfullyRemoved.ts";
+import { parse } from "./pipelines/Options/parse.ts";
+import { validate } from "./pipelines/Options/validate.ts";
 
 /** @typedef {import('node:fs').Stats} Stats */
 
@@ -78,7 +78,7 @@ const filterStatsOlderThan = (time) => {
     return filterStatsBy([isOlderThan(time)]);
 };
 
-/** @returns {import("../../../shared/pipelines/map.js").Mapper<FileWithStats, string>} */
+/** @returns {import("../../../shared/pipelines/map\.ts").Mapper<FileWithStats, string>} */
 const fileToPath =
     () =>
     ([path]) =>
@@ -86,7 +86,7 @@ const fileToPath =
 
 const getTime =
     () =>
-    /** @param {import("./transformers/OptionsTransformer.js").ParsedOptions} options */
+    /** @param {import("./transformers/OptionsTransformer\.ts").ParsedOptions} options */
     ({ time }) =>
         time;
 

@@ -1,16 +1,17 @@
-import { execAsync } from "./execAsync.js";
+import { execAsync } from "./execAsync.ts";
 
 /**
  * Runs a command in the shell and returns the output. Throws an error if the command fails.
  *
- * @param {string} command
- * @param  {...string} args
- *
- * @returns {Promise<string>}
+ * @param command
+ * @param args
  *
  * @throws {Error}
  */
-export async function exec(command, ...args) {
+export async function exec(
+    command: string,
+    ...args: string[]
+): Promise<string> {
     const { stdout, stderr } = await execAsync([command, ...args].join(" "));
 
     if (stderr) throw new Error(stderr.trimEnd());

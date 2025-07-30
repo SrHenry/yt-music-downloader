@@ -1,6 +1,6 @@
 import { readdirSync } from "node:fs";
 import { resolve } from "node:path";
-import { error } from "./log/index.js";
+import { error } from "./log/index.ts";
 
 const autoloadFiles = readdirSync(resolve(import.meta.dirname, "../"), {
     recursive: true,

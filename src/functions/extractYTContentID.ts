@@ -1,5 +1,5 @@
 import { Experimental } from "@srhenry/type-utils";
-import { runYtDlp } from "./runYtDlp.js";
+import { runYtDlp } from "./runYtDlp.ts";
 
 const { $switch } = Experimental;
 

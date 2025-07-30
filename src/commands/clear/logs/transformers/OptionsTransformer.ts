@@ -1,11 +1,11 @@
 /**
  * @typedef {{ time: number }} ModifiedOptions
  *
- * @typedef {Prettify<Omit<import('../schemas/Options.js').OptionsSchema, keyof ModifiedOptions> & ModifiedOptions>} ParsedOptions
+ * @typedef {Prettify<Omit<import('../schemas/Options\.ts').OptionsSchema, keyof ModifiedOptions> & ModifiedOptions>} ParsedOptions
  */
 
 /**
- * @param {import('../schemas/Options.js').OptionsSchema} from
+ * @param {import('../schemas/Options\.ts').OptionsSchema} from
  *
  * @returns {ParsedOptions}
  */

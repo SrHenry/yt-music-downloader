@@ -3,7 +3,7 @@ import {
     downloadAction,
     playlistOption,
     sourcesArgument,
-} from "./download/index.js";
+} from "./download/index.ts";
 
 export const createWorkflowBaseCommand = () =>
     new Command()

@@ -1,4 +1,4 @@
-import { runYtDlp } from "./runYtDlp.js";
+import { runYtDlp } from "./runYtDlp.ts";
 
 export async function isValidYTContentID(yt_src) {
     try {

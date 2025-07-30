@@ -1,4 +1,4 @@
-import { error } from "../../log/index.js";
+import { error } from "../../log/index.ts";
 
 export const logExceptions = (formatter) => {
     return (results) =>

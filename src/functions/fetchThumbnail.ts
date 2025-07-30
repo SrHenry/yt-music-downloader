@@ -1,7 +1,7 @@
-import { downloadThumbnail } from "./downloadThumbnail.js";
-import { getAlbumName } from "./getAlbumName.js";
-import { getResolution } from "./getResolution.js";
-import { getThumbnails } from "./getThumbnails.js";
+import { downloadThumbnail } from "./downloadThumbnail.ts";
+import { getAlbumName } from "./getAlbumName.ts";
+import { getResolution } from "./getResolution.ts";
+import { getThumbnails } from "./getThumbnails.ts";
 
 /**
  * Fetch the thumbnail from a music YouTube Source

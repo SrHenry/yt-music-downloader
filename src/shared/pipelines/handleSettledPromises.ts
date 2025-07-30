@@ -1,6 +1,6 @@
 import { Experimental } from "@srhenry/type-utils";
 
-import { pass } from "../functions/pass.js";
+import { pass } from "../functions/pass.ts";
 
 /**
  * @template T

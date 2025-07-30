@@ -1,11 +1,11 @@
 import chalk from "chalk";
 
-import { pipeline } from "../../pipeline.js";
-import { run } from "../../shared/functions/run.js";
-import { useAction } from "../_shared/functions/useAction.js";
-import { sources } from "./_arguments/sources.js";
-import { playlist } from "./_options/playlist.js";
-import { validate } from "./_options/validators/OptionsValidator.js";
+import { pipeline } from "../../pipeline.ts";
+import { run } from "../../shared/functions/run.ts";
+import { useAction } from "../_shared/functions/useAction.ts";
+import { sources } from "./_arguments/sources.ts";
+import { playlist } from "./_options/playlist.ts";
+import { validate } from "./_options/validators/OptionsValidator.ts";
 
 /**
  * @param {string[]} sources
@@ -69,6 +69,6 @@ export const createDownloadCommand =
     };
 
 /**
- * @typedef {(typeof downloadAction) extends import("../_shared/functions/useAction.js").CommandAction<[sources: string[], options: import("commander").OptionValues]> ? "yes" : "no"} AAA
- * @typedef {import("../_shared/functions/useAction.js").AsCommandAction<(typeof downloadAction)> extends never ? "no" : "yes"} BBB
+ * @typedef {(typeof downloadAction) extends import("../_shared/functions/useAction\.ts").CommandAction<[sources: string[], options: import("commander").OptionValues]> ? "yes" : "no"} AAA
+ * @typedef {import("../_shared/functions/useAction\.ts").AsCommandAction<(typeof downloadAction)> extends never ? "no" : "yes"} BBB
  */

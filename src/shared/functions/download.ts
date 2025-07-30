@@ -1,7 +1,7 @@
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
-import { generateRandomString } from "./generateRandomString.js";
+import { generateRandomString } from "./generateRandomString.ts";
 
 /**
  * Fetches an URL as a file.

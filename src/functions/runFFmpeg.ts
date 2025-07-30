@@ -1,4 +1,4 @@
-import { exec } from "../shared/functions/exec.js";
+import { exec } from "../shared/functions/exec.ts";
 
 /**
  * Runs ffmpeg in the shell and returns the output.

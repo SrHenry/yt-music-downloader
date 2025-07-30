@@ -1,17 +1,17 @@
 import { Experimental } from "@srhenry/type-utils";
 
-import { __root__ } from "../../../__root__.js";
-import { extractFullPath } from "../../../shared/functions/extractFullPath.js";
-import { $do } from "../../../shared/pipelines/do.js";
-import { listDir } from "../../../shared/pipelines/listDir.js";
-import { logExceptions } from "../../../shared/pipelines/logExceptions.js";
-import { printMessage } from "../../../shared/pipelines/printMessage.js";
-import { removeFiles } from "../../../shared/pipelines/removeFiles.js";
-import { split } from "../../../shared/pipelines/split.js";
-import { trimList as trim } from "../../../shared/pipelines/trimList.js";
-import { useFilters } from "../../../shared/pipelines/useFilters.js";
-import { countSucessfullyRemoved } from "../../_shared/pipelines/countSucessfullyRemoved.js";
-import { validate } from "./pipelines/Options/validate.js";
+import { __root__ } from "../../../__root__.ts";
+import { extractFullPath } from "../../../shared/functions/extractFullPath.ts";
+import { $do } from "../../../shared/pipelines/do.ts";
+import { listDir } from "../../../shared/pipelines/listDir.ts";
+import { logExceptions } from "../../../shared/pipelines/logExceptions.ts";
+import { printMessage } from "../../../shared/pipelines/printMessage.ts";
+import { removeFiles } from "../../../shared/pipelines/removeFiles.ts";
+import { split } from "../../../shared/pipelines/split.ts";
+import { trimList as trim } from "../../../shared/pipelines/trimList.ts";
+import { useFilters } from "../../../shared/pipelines/useFilters.ts";
+import { countSucessfullyRemoved } from "../../_shared/pipelines/countSucessfullyRemoved.ts";
+import { validate } from "./pipelines/Options/validate.ts";
 
 /**
  * @template T
@@ -37,7 +37,7 @@ const createFilter =
 /** @type {() => (music: import('node:fs').Dirent) => string} */
 const getPaths = () => (music) => extractFullPath(music);
 
-/** @type {() => (options: import("./schemas/Options.js").OptionsSchema) => string} */
+/** @type {() => (options: import("./schemas/Options\.ts").OptionsSchema) => string} */
 const getAllowedExtensionsList =
     () =>
     ({ allowedExtensions }) =>

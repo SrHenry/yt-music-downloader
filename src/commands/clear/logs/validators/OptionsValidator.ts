@@ -1,6 +1,6 @@
 import { Experimental } from "@srhenry/type-utils";
 
-import { Options } from "../schemas/Options.js";
+import { Options } from "../schemas/Options.ts";
 
 /**
  * @param {unknown} value
