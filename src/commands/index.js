@@ -1,5 +1,9 @@
 import { Command } from "commander";
-import { downloadAction, sourcesArgument } from "./download/index.js";
+import {
+    downloadAction,
+    playlistOption,
+    sourcesArgument,
+} from "./download/index.js";
 
 export const createWorkflowBaseCommand = () =>
     new Command()
@@ -8,5 +12,6 @@ export const createWorkflowBaseCommand = () =>
             "A CLI to automate the worflow of music downloading from YouTube Music"
         )
         .addArgument(sourcesArgument)
+        .addOption(playlistOption)
         .action(downloadAction)
         .showHelpAfterError();

@@ -1,35 +1,53 @@
 import chalk from "chalk";
 
 import { pipeline } from "../../pipeline.js";
-import { sources } from "./arguments/sources.js";
+import { run } from "../../shared/functions/run.js";
+import { useAction } from "../_shared/functions/useAction.js";
+import { sources } from "./_arguments/sources.js";
+import { playlist } from "./_options/playlist.js";
+import { validate } from "./_options/validators/OptionsValidator.js";
 
 /**
- *
- * @param  {string[]} sources
+ * @param {string[]} sources
+ * @param {import("commander").OptionValues} _options
  */
-export async function downloadAction(sources) {
-    for (let c = 0; c < sources.length; c++) {
-        const yt_src = sources[c];
+export function downloadAction(sources, _options) {
+    const { playlist } = validate(_options);
 
-        console.log();
-        console.log(
-            "================================================================================"
-        );
-        console.log(`Processing (${c + 1}/${sources.length}):`);
-        console.log();
-        console.log();
-        await pipeline(yt_src);
-        console.log(
-            "================================================================================"
-        );
-        console.log();
-        console.log();
+    if (playlist) {
+        // TODO: implement playlist parsing & download
+        throw new Error("PANIC! Not implemented yet");
     }
 
-    console.log(chalk.green("All done!"));
+    run(async () => {
+        for (let i = 0; i < sources.length; i++) {
+            const c = i + 1;
+            const yt_src = sources[i];
+
+            console.log();
+            console.log(
+                "================================================================================"
+            );
+            console.log(`Processing (${c}/${sources.length}):`);
+            console.log();
+            console.log();
+
+            await pipeline(yt_src).catch((err) =>
+                console.error(`Error while processing entry #${c}:`, err)
+            );
+
+            console.log(
+                "================================================================================"
+            );
+            console.log();
+            console.log();
+        }
+
+        console.log(chalk.green("All done!"));
+    });
 }
 
-export { sources as sourcesArgument };
+export { playlist as playlistOption, sources as sourcesArgument };
 
 export const createDownloadCommand =
     () =>
@@ -44,7 +62,13 @@ export const createDownloadCommand =
                 "downloads music from a list of YouTube URLs or Content IDs"
             )
             .addArgument(sources)
-            .action(downloadAction);
+            .addOption(playlist)
+            .action(useAction(downloadAction));
 
         return program;
     };
+
+/**
+ * @typedef {(typeof downloadAction) extends import("../_shared/functions/useAction.js").CommandAction<[sources: string[], options: import("commander").OptionValues]> ? "yes" : "no"} AAA
+ * @typedef {import("../_shared/functions/useAction.js").AsCommandAction<(typeof downloadAction)> extends never ? "no" : "yes"} BBB
+ */
