@@ -10,19 +10,20 @@
         "workflow": "src/workflow.js"
     },
     "scripts": {
-        "postinstall": "run-script-os",
+        "postinstall": "run-script-os; build",
         "postinstall:win32": "if not exist .env copy .env.example .env else echo \"[INFO]: '.env' already exists!\"",
         "postinstall:darwin:linux": "[ ! -f .env ] && cp .env.example .env || echo \"[INFO]: '.env' already exists!\"",
-        "workflow": "src/workflow.js"
+        "workflow": "tsx src/workflow.ts"
     },
     "type": "module",
     "devDependencies": {
         "@eslint/js": "^9.30.1",
+        "@types/debug": "^4.1.12",
         "@types/node": "^24.1.0",
         "eslint": "^9.30.1",
         "globals": "^16.3.0",
         "run-script-os": "^1.1.6",
-        "typescript": "^5.8.3"
+        "typescript": "^5.9.2"
     },
     "dependencies": {
         "@srhenry/type-utils": "^0.5.2",
