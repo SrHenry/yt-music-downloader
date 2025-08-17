@@ -15,7 +15,9 @@ export async function downloadAction(
 
     if (playlist) {
         // TODO: implement playlist parsing & download
-        throw new Error("PANIC! Not implemented yet");
+        return void console.error(
+            chalk.redBright("PANIC! '-p' flag not implemented yet")
+        );
     }
 
     run(async () => {
