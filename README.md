@@ -25,7 +25,7 @@ Este projeto depende de ferramentas **externas**, que precisam estar instaladas 
 
 ---
 
-> ℹ️ Este projeto requer Node.js `>=20 <21 || >=22 <23 || >=24 <25`.
+> ℹ️ Este projeto requer **Node.js** **20.x**, **22.x**, ou **24.x**.
 
 ## 📁 Estrutura do Projeto
 
