@@ -1,4 +1,9 @@
+import { object, string } from "@srhenry/type-utils";
 import { exec } from "../shared/functions/exec.ts";
+
+const hasMessage = object({
+    message: string(),
+});
 
 /**
  * Runs ffmpeg in the shell and returns the output.
@@ -9,10 +14,12 @@ import { exec } from "../shared/functions/exec.ts";
  *
  * @throws {Error}
  */
-export async function runFFmpeg(...args) {
+export async function runFFmpeg(...args: string[]): Promise<string> {
     try {
         return await exec("ffmpeg", ...args);
-    } catch ({ message }) {
-        return message;
+    } catch (err) {
+        if (hasMessage(err)) return err.message;
+
+        throw err;
     }
 }

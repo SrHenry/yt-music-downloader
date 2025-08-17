@@ -3,13 +3,13 @@ import { runYtDlp } from "./runYtDlp.ts";
 /**
  * Download music from YouTube/YT Music using a URL or Content ID.
  *
- * @param {string} yt_src
+ * @param yt_src Music source
  *
- * @returns {Promise<string>}
+ * @returns A promise with a string path to the music file in filesystem
  *
  * @throws {Error}
  */
-export function downloadMusic(yt_src) {
+export function downloadMusic(yt_src: string): Promise<string> {
     const args = [
         "-q",
         "--no-warnings",

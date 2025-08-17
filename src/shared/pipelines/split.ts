@@ -1,5 +1,4 @@
-/** @type {(separator?: string | RegExp) => (list: string) => string[]} */
 export const split =
-    (separator = ",") =>
-    (str) =>
+    (separator: string | RegExp = ",") =>
+    (str: string) =>
         str.split(separator);

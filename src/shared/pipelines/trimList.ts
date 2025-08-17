@@ -1,2 +1,1 @@
-/** @type {() => (list: string[]) => string[]} */
-export const trimList = () => (list) => list.map((str) => str.trim());
+export const trimList = () => (list: string[]) => list.map((str) => str.trim());

@@ -3,11 +3,11 @@ import { runYtDlp } from "./runYtDlp.ts";
 /**
  * Fetches from the API the thumbnails metadata of a given YouTube source.
  *
- * @param {string} yt_src
+ * @param yt_src Music source
  *
- * @returns {Promise<Thumbnail[]>}
+ * @returns A promise with an Array containing Thumbnail objects
  */
-export async function getThumbnails(yt_src) {
+export async function getThumbnails(yt_src: string): Promise<Thumbnail[]> {
     const args = ["-q", "--no-warnings", "--print", "thumbnails", "-s", yt_src];
 
     const output = await runYtDlp(...args);

@@ -1,20 +1,15 @@
+import type { Dirent, PathLike } from "node:fs";
 import { readdir } from "node:fs/promises";
 
-/**
- * @typedef {{ recursive?: boolean }} ListDirOptions
- */
+export type ListDirOptions = { recursive?: boolean };
 
-/**
- * @param {ListDirOptions} options
- * @return {(path: import('node:fs').PathLike) => Promise<import('node:fs').Dirent>} */
-export const listDir =
-    (
-        options = {
-            recursive: true,
-        }
-    ) =>
-    (path) =>
-        readdir(path, {
-            withFileTypes: true,
-            ...options,
-        });
+type listDirWrappedFn = (path: PathLike) => Promise<Dirent[]>;
+
+export function listDir(): listDirWrappedFn;
+export function listDir(options: ListDirOptions): listDirWrappedFn;
+
+export function listDir(
+    options: ListDirOptions = { recursive: true }
+): listDirWrappedFn {
+    return (path) => readdir(path, { withFileTypes: true, ...options });
+}

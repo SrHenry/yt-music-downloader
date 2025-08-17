@@ -7,12 +7,8 @@ import { isValidYTContentID } from "./functions/isValidYTContentID.ts";
 
 /**
  * Describes the pipeline to download music from YouTube and embed the thumbnail.
- *
- * @param {string} yt_src
- *
- * @returns {Promise<void>}
  */
-export async function pipeline(yt_src = false) {
+export async function pipeline(yt_src: string | null = null): Promise<void> {
     try {
         if (!yt_src)
             throw new Error(

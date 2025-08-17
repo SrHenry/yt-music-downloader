@@ -1,4 +1,4 @@
 import "./__autoload.ts";
+import type { Env as EnvType } from "./schemas/EnvSchema.ts";
 
-/** @type {import('./schemas/EnvSchema\.ts').EnvSchema>} */
-export const Env = process.env;
+export const Env = process.env as Prettify<NodeJS.ProcessEnv & EnvType>;

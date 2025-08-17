@@ -8,11 +8,13 @@ import { getAlbumName } from "./getAlbumName.ts";
 /**
  * Fetches the thumbnail of a YT Source and returns its path
  *
- * @param {string} yt_src
+ * @param yt_src Music source
  *
- * @returns {Promise<string>}
+ * @returns A promise with the string path to the thumbnail file.
  */
-export async function fetchThumbnailIfNotExists(yt_src) {
+export async function fetchThumbnailIfNotExists(
+    yt_src: string
+): Promise<string> {
     console.log("Fetching album name...");
     const albumName = await getAlbumName(yt_src);
 

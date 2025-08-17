@@ -1,8 +1,11 @@
-import { boolean, Experimental, object } from "@srhenry/type-utils";
+import {
+    boolean,
+    Experimental,
+    object,
+    type GetTypeGuard,
+} from "@srhenry/type-utils";
 
-/**
- * @typedef {import("@srhenry/type-utils").GetTypeGuard<typeof OptionsSchema>} OptionsSchema
- */
+export type OptionsSchema = GetTypeGuard<typeof OptionsSchema>;
 
 const OptionsSchema = object({
     playlist: boolean(),

@@ -2,45 +2,64 @@ import { Experimental } from "@srhenry/type-utils";
 
 import { pass } from "../functions/pass.ts";
 
-/**
- * @template T
- * @template TResult
- *
- * @typedef {(value: T) => TResult | PromiseLike<TResult>} OnFulfilledCallback
- */
+export type OnFulfilledCallback<T, TResult> = (
+    value: T
+) => TResult | PromiseLike<TResult>;
 
-/**
- * @template TResult
- *
- * @typedef {(reason: any) => TResult | PromiseLike<TResult>} OnRejectedCallback
- */
+export type OnRejectedCallback<TResult> = (
+    reason: any
+) => TResult | PromiseLike<TResult>;
 
-/**
- * @template T
- * @template TFulfulledResult
- * @template TRejectedResult
- *
- * @param {OnFulfilledCallback<T, TFulfulledResult> | undefined | null} onSucess
- * @param {OnRejectedCallback<TRejectedResult> | undefined | null} onReject
- */
+type processResultsFn<T, TFulfulledResult, TRejectedResult> =
+    Experimental.AsLambda<
+        (
+            results: PromiseSettledResult<T>[]
+        ) => [
+            sucessHandledResults: TFulfulledResult[],
+            rejectHandledResults: TRejectedResult[]
+        ]
+    >;
 
-export const handleSettledPromises = (onfulfilled = pass, onrejected = pass) =>
-    Experimental.lambda(
-        /**
-         * @param {PromiseSettledResult<T>[]} results
-         * @returns {[sucessHandledResults: TFulfulledResult[], rejectHandledResults: TRejectedResult[]]}
-         */
-        (results) => {
-            const onSucessResults = [];
-            const onRejectedResults = [];
+export function handleSettledPromises<
+    T,
+    TFulfulledResult,
+    TRejectedResult
+>(): processResultsFn<T, TFulfulledResult, TRejectedResult>;
 
-            for (const result of results) {
-                if (result.status === "fulfilled")
-                    onSucessResults.push((onfulfilled ?? pass)(result.value));
-                else
-                    onRejectedResults.push((onrejected ?? pass)(result.reason));
-            }
+export function handleSettledPromises<T, TFulfulledResult, TRejectedResult>(
+    onfulfilled: OnFulfilledCallback<T, TFulfulledResult>,
+    onrejected: OnRejectedCallback<TRejectedResult>
+): processResultsFn<T, TFulfulledResult, TRejectedResult>;
 
-            return [onSucessResults, onRejectedResults];
+export function handleSettledPromises<T, TFulfulledResult, TRejectedResult>(
+    onfulfilled:
+        | OnFulfilledCallback<T, TFulfulledResult>
+        | undefined
+        | null = pass as OnFulfilledCallback<T, TFulfulledResult>,
+    onrejected:
+        | OnRejectedCallback<TRejectedResult>
+        | undefined
+        | null = pass as OnRejectedCallback<TRejectedResult>
+) {
+    return Experimental.lambda((results: PromiseSettledResult<T>[]) => {
+        const onSucessResults: TFulfulledResult[] = [];
+        const onRejectedResults: TRejectedResult[] = [];
+
+        for (const result of results) {
+            if (result.status === "fulfilled")
+                onSucessResults.push(
+                    (onfulfilled ?? pass)(
+                        result.value
+                    ) as unknown as TFulfulledResult
+                );
+            else
+                onRejectedResults.push(
+                    (onrejected ?? pass)(
+                        result.reason
+                    ) as unknown as TRejectedResult
+                );
         }
-    );
+
+        return [onSucessResults, onRejectedResults] as const;
+    });
+}

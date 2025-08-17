@@ -1,12 +1,10 @@
 import "../__autoload.ts";
 
-import { object, string } from "@srhenry/type-utils";
+import { object, string, type GetTypeGuard } from "@srhenry/type-utils";
 
 export const EnvSchema = object({
     ROOT_PATH: string(),
     THUMBNAILS_PATH: string(),
 });
 
-/**
- * @typedef {import('@srhenry/type-utils').GetTypeGuard<typeof EnvSchema>} EnvSchema
- */
+export type Env = GetTypeGuard<typeof EnvSchema>;

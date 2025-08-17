@@ -3,11 +3,11 @@ import { runYtDlp } from "./runYtDlp.ts";
 /**
  * Fetches the album name of a given YouTube source when available.
  *
- * @param {string} yt_src
+ * @param yt_src Music source
  *
- * @returns {Promise<string>}
+ * @returns A promise with the Album name.
  */
-export function getAlbumName(yt_src) {
+export function getAlbumName(yt_src: string): Promise<string> {
     const args = ["-q", "--no-warnings", "--print", "album", "-s", yt_src];
 
     return runYtDlp(...args);

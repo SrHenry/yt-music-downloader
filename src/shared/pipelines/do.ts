@@ -1,10 +1,8 @@
-/**
- * @template TWrapped
- * @param {import("@srhenry/type-utils").Experimental.Func0<any> | import("@srhenry/type-utils").Experimental.Func1<TWrapped, any>} fn
- *
- * @returns {(wrapped: TWrapped) => TWrapped}
- */
-export function $do(fn) {
+import type { Experimental } from "@srhenry/type-utils";
+
+export function $do<TWrapped>(
+    fn: Experimental.Func0<unknown> | Experimental.Func1<TWrapped, unknown>
+): (wrapped: TWrapped) => TWrapped {
     return (wrapped) => {
         fn(wrapped);
 

@@ -6,12 +6,29 @@ import { getThumbnails } from "./getThumbnails.ts";
 /**
  * Fetch the thumbnail from a music YouTube Source
  *
- * @param {string} yt_src
- * @param {string|null} albumName
+ * @param yt_src Music source
  *
- * @returns {Promise<string>}
+ * @returns A promise with a string path to the thumbnail file.
  */
-export async function fetchThumbnail(yt_src, albumName = null) {
+export async function fetchThumbnail(yt_src: string): Promise<string>;
+
+/**
+ * Fetch the thumbnail from a music YouTube Source
+ *
+ * @param yt_src Music source
+ * @param albumName Album name to name the Cover Art (thumbnail)
+ *
+ * @returns A promise with a string path to the thumbnail file.
+ */
+export async function fetchThumbnail(
+    yt_src: string,
+    albumName: string
+): Promise<string>;
+
+export async function fetchThumbnail(
+    yt_src: string,
+    albumName: string | null = null
+): Promise<string> {
     if (albumName === null) {
         albumName = await getAlbumName(yt_src);
 
@@ -31,7 +48,7 @@ export async function fetchThumbnail(yt_src, albumName = null) {
 
     /** Biggest square aspect ratio thumbnail (Album Cover Art) */
     const thumbnail = squareThumbnails.reduce((t1, t2) =>
-        t1.width > t2.width ? t1 : t2
+        (t1.width ?? 0) > (t2.width ?? 0) ? t1 : t2
     );
 
     console.log(

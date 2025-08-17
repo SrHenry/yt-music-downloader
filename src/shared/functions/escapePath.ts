@@ -1,9 +1,6 @@
 /**
- * Escapes slash characters
- *
- * @param {string} path
- * @returns {string}
+ * Escapes slash characters in a path-like string
  */
-export function escapePath(path) {
+export function escapePath(path: string): string {
     return path.replace(/\//g, "\\/");
 }

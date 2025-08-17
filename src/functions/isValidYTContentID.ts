@@ -1,6 +1,11 @@
 import { runYtDlp } from "./runYtDlp.ts";
 
-export async function isValidYTContentID(yt_src) {
+/**
+ * Checks if a YT source is valid.
+ *
+ * @param yt_src Music source
+ */
+export async function isValidYTContentID(yt_src: string) {
     try {
         const args = [
             "--simulate",

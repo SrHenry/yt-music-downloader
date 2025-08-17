@@ -8,12 +8,13 @@ import { runFFmpeg } from "./runFFmpeg.ts";
 /**
  * It embeds a thumbnail into a music file. Uses FFmpeg under the hood to achieve it.
  *
- * @param {string} music_file
- * @param {string} thumbnail_file
- *
- * @returns {Promise<void>}
+ * @param music_file string path to the music file
+ * @param thumbnail_file string path to the thumbnail file
  */
-export async function embedThumbnail(music_file, thumbnail_file) {
+export async function embedThumbnail(
+    music_file: string,
+    thumbnail_file: string
+): Promise<void> {
     const output_path = resolve(ROOT_PATH, "out", basename(music_file));
     const args = [
         "-hide_banner",

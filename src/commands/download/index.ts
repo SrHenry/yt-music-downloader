@@ -1,17 +1,16 @@
 import chalk from "chalk";
 
+import { type Command, OptionValues } from "commander";
 import { pipeline } from "../../pipeline.ts";
 import { run } from "../../shared/functions/run.ts";
-import { useAction } from "../_shared/functions/useAction.ts";
 import { sources } from "./_arguments/sources.ts";
 import { playlist } from "./_options/playlist.ts";
 import { validate } from "./_options/validators/OptionsValidator.ts";
 
-/**
- * @param {string[]} sources
- * @param {import("commander").OptionValues} _options
- */
-export function downloadAction(sources, _options) {
+export async function downloadAction(
+    sources: string[],
+    _options: OptionValues
+) {
     const { playlist } = validate(_options);
 
     if (playlist) {
@@ -49,26 +48,16 @@ export function downloadAction(sources, _options) {
 
 export { playlist as playlistOption, sources as sourcesArgument };
 
-export const createDownloadCommand =
-    () =>
-    /**
-     * @param {import('commander').Command} program
-     */
-    (program) => {
-        const download = program.command("download");
+export const createDownloadCommand = () => (program: Command) => {
+    const download = program.command("download");
 
-        download
-            .description(
-                "downloads music from a list of YouTube URLs or Content IDs"
-            )
-            .addArgument(sources)
-            .addOption(playlist)
-            .action(useAction(downloadAction));
+    download
+        .description(
+            "downloads music from a list of YouTube URLs or Content IDs"
+        )
+        .addArgument(sources)
+        .addOption(playlist)
+        .action(downloadAction);
 
-        return program;
-    };
-
-/**
- * @typedef {(typeof downloadAction) extends import("../_shared/functions/useAction\.ts").CommandAction<[sources: string[], options: import("commander").OptionValues]> ? "yes" : "no"} AAA
- * @typedef {import("../_shared/functions/useAction\.ts").AsCommandAction<(typeof downloadAction)> extends never ? "no" : "yes"} BBB
- */
+    return program;
+};

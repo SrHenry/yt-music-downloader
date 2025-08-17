@@ -1,5 +1,8 @@
 import { Experimental } from "@srhenry/type-utils";
+import type { OptionValues } from "commander";
+import type { Dirent } from "node:fs";
 
+import { OptionsSchema } from "@/commands/clear/music/schemas/Options.ts";
 import { __root__ } from "../../../__root__.ts";
 import { extractFullPath } from "../../../shared/functions/extractFullPath.ts";
 import { $do } from "../../../shared/pipelines/do.ts";
@@ -13,52 +16,41 @@ import { useFilters } from "../../../shared/pipelines/useFilters.ts";
 import { countSucessfullyRemoved } from "../../_shared/pipelines/countSucessfullyRemoved.ts";
 import { validate } from "./pipelines/Options/validate.ts";
 
-/**
- * @template T
- * @typedef {((value: T, index: number, array: T[]) => boolean) | (<S extends T> (value: T, index: number, array: T[]) => value is S)} Predicate<T>
- */
+type Predicate<T> =
+    | ((value: T, index: number, array: T[]) => boolean)
+    | (<S extends T>(value: T, index: number, array: T[]) => value is S);
 
 const musicPath = __root__;
 
-/**
- *  @param {string[]} allowedExtensions
- *  @returns {(file: import('node:fs').Dirent) => boolean}
- */
-const useAllowedExtensions = (allowedExtensions) => (file) =>
+const useAllowedExtensions = (allowedExtensions: string[]) => (file: Dirent) =>
     file.isFile() &&
     new RegExp(`.(${allowedExtensions.join("|")})$`).test(file.name);
 
-const createFilter =
+const createFilter = () => (allowedExtensions: string[]) =>
+    useAllowedExtensions(allowedExtensions);
+
+const getPaths =
     () =>
-    /** @param {string[]} allowedExtensions */
-    (allowedExtensions) =>
-        useAllowedExtensions(allowedExtensions);
+    (music: Dirent[]): string[] =>
+        extractFullPath(music);
 
-/** @type {() => (music: import('node:fs').Dirent) => string} */
-const getPaths = () => (music) => extractFullPath(music);
-
-/** @type {() => (options: import("./schemas/Options\.ts").OptionsSchema) => string} */
 const getAllowedExtensionsList =
     () =>
-    ({ allowedExtensions }) =>
+    ({ allowedExtensions }: OptionsSchema) =>
         allowedExtensions;
 
-export const clearMusic =
-    () =>
-    /** @param {Predicate<import('node:fs').Dirent>} filter */
-    (filter) =>
-        Experimental.pipe(musicPath)
-            .pipe(listDir({ recursive: false }))
-            .pipeAsync(useFilters([filter]))
-            .pipeAsync(getPaths())
-            .pipeAsync(removeFiles())
-            .pipeAsync($do(logExceptions("Error while deleting files: %s")))
-            .pipeAsync(countSucessfullyRemoved())
-            .pipeAsync(printMessage("Removed :{count} music files."))
-            .depipe();
+export const clearMusic = () => (filter: Predicate<Dirent>) =>
+    Experimental.pipe(musicPath)
+        .pipe(listDir({ recursive: false }))
+        .pipeAsync(useFilters([filter]))
+        .pipeAsync(getPaths())
+        .pipeAsync(removeFiles())
+        .pipeAsync($do(logExceptions<any>("Error while deleting files: %s")))
+        .pipeAsync(countSucessfullyRemoved())
+        .pipeAsync(printMessage("Removed :{count} music files.")<[number]>)
+        .depipe();
 
-/** @param {import('commander').OptionValues} options */
-export const clearMusicAction = (options) =>
+export const clearMusicAction = (options: OptionValues) =>
     Experimental.pipe(options)
         .pipe(validate())
         .pipe(getAllowedExtensionsList())

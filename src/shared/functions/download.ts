@@ -10,7 +10,7 @@ import { generateRandomString } from "./generateRandomString.ts";
  *
  * @returns {Promise<ArrayBuffer>}
  */
-export async function download(url) {
+export async function download(url: string): Promise<ArrayBuffer> {
     const response = await fetch(url);
     return await response.arrayBuffer();
 }
@@ -19,18 +19,47 @@ export async function download(url) {
  * Downloads an URL as a file and writes to a given path.
  *
  * @param {string} url
+ *
+ * @returns
+ */
+export async function downloadAsFile(url: string): Promise<Buffer<ArrayBuffer>>;
+/**
+ * Downloads an URL as a file and writes to a given path.
+ *
+ * @param {string} url
+ * @param {string} filename
+ *
+ * @returns
+ */
+export async function downloadAsFile(
+    url: string,
+    filename: string
+): Promise<Buffer<ArrayBuffer>>;
+/**
+ * Downloads an URL as a file and writes to a given path.
+ *
+ * @param {string} url
  * @param {string} filename
  * @param {string} path
  *
- * @returns {Promise<void>}
- *
+ * @returns
  */
-export async function downloadAsFile(url, filename = false, path = false) {
-    const buf = await download(url);
+export async function downloadAsFile(
+    url: string,
+    filename: string,
+    path: string
+): Promise<void>;
+
+export async function downloadAsFile(
+    url: string,
+    filename: string | null = null,
+    path: string | null = null
+): Promise<void | Buffer> {
+    const buf = await download(url).then((b) => Buffer.from(b));
 
     if (!path) return buf;
 
     if (!filename) filename = generateRandomString(10);
 
-    await writeFile(join(path, filename), Buffer.from(buf));
+    await writeFile(join(path, filename), buf);
 }

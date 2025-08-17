@@ -1,8 +1,8 @@
-/**
- * @template T
- * @typedef {((value: T, index: number, array: T[]) => boolean) | (<S extends T> (value: T, index: number, array: T[]) => value is S)} Predicate<T>
- */
+type Predicate<T> =
+    | ((value: T, index: number, array: T[]) => boolean)
+    | (<S extends T>(value: T, index: number, array: T[]) => value is S);
 
-/** @type {<T>(filters: Predicate<T>[]) => (list:T[]) => T[]}} */
-export const useFilters = (filters) => (list) =>
-    filters.reduce((_, fn) => _.filter(fn), list);
+export const useFilters =
+    <T>(filters: Predicate<T>[]) =>
+    (list: T[]) =>
+        filters.reduce((_, fn) => _.filter(fn), list);

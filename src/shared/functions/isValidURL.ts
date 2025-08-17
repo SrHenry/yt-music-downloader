@@ -1,11 +1,7 @@
 /**
  * Check if a string is a valid URL
- *
- * @param {string} str
- *
- * @returns {boolean}
  */
-export function isValidURL(str) {
+export function isValidURL(str: string): boolean {
     try {
         new URL(str);
         return true;

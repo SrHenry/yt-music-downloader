@@ -1,5 +1,4 @@
 import { unlink } from "node:fs/promises";
 
-/** @returns {(files: string[]) => Promise<PromiseSettledResult<void>[]> } */
-export const removeFiles = () => async (files) =>
+export const removeFiles = () => async (files: string[]) =>
     await Promise.allSettled(files.map((path) => unlink(path)));

@@ -7,9 +7,9 @@ import {
     useCustomRules,
 } from "@srhenry/type-utils";
 
-/**
- * @typedef {import("@srhenry/type-utils").GetTypeGuard<typeof OptionsSchema>} OptionsSchema
- */
+export type OptionsSchema = import("@srhenry/type-utils").GetTypeGuard<
+    typeof OptionsSchema
+>;
 
 const AllowedExtensionsStringListRule = createRule({
     name: "yt-music-downloader.String.AllowedExtensionsList",

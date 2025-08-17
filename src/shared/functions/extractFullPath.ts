@@ -1,5 +1,6 @@
+import type { Dirent } from "node:fs";
+
 import { resolve } from "node:path";
 
-/** @param {Dirent[]} files */
-export const extractFullPath = (files) =>
+export const extractFullPath = (files: Dirent[]) =>
     files.map(({ name, parentPath }) => resolve(parentPath, name));
