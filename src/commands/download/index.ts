@@ -2,7 +2,6 @@ import chalk from "chalk";
 
 import { type Command, OptionValues } from "commander";
 import { pipeline } from "../../pipeline.ts";
-import { run } from "../../shared/functions/run.ts";
 import { sources } from "./_arguments/sources.ts";
 import { playlist } from "./_options/playlist.ts";
 import { validate } from "./_options/validators/OptionsValidator.ts";
@@ -20,32 +19,30 @@ export async function downloadAction(
         );
     }
 
-    run(async () => {
-        for (let i = 0; i < sources.length; i++) {
-            const c = i + 1;
-            const yt_src = sources[i];
+    for (let i = 0; i < sources.length; i++) {
+        const c = i + 1;
+        const yt_src = sources[i];
 
-            console.log();
-            console.log(
-                "================================================================================"
-            );
-            console.log(`Processing (${c}/${sources.length}):`);
-            console.log();
-            console.log();
+        console.log();
+        console.log(
+            "================================================================================"
+        );
+        console.log(`Processing (${c}/${sources.length}):`);
+        console.log();
+        console.log();
 
-            await pipeline(yt_src).catch((err) =>
-                console.error(`Error while processing entry #${c}:`, err)
-            );
+        await pipeline(yt_src).catch((err) =>
+            console.error(`Error while processing entry #${c}:`, err)
+        );
 
-            console.log(
-                "================================================================================"
-            );
-            console.log();
-            console.log();
-        }
+        console.log(
+            "================================================================================"
+        );
+        console.log();
+        console.log();
+    }
 
-        console.log(chalk.green("All done!"));
-    });
+    console.log(chalk.green("All done!"));
 }
 
 export { playlist as playlistOption, sources as sourcesArgument };
