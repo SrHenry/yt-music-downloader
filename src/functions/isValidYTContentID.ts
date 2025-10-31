@@ -1,4 +1,4 @@
-import { runYtDlp } from "./runYtDlp.ts";
+import { runYtDlp } from "@/functions/runYtDlp.ts";
 
 /**
  * Checks if a YT source is valid.

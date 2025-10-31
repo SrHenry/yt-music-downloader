@@ -1,4 +1,4 @@
-import { runYtDlp } from "./runYtDlp.ts";
+import { runYtDlp } from "@/functions/runYtDlp.ts";
 
 /**
  * Download music from YouTube/YT Music using a URL or Content ID.

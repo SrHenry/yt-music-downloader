@@ -1,7 +1,7 @@
 import "dotenv/config";
 
-import { info } from "../log/index.ts";
-import { validateEnv } from "./validators/env.ts";
+import { validateEnv } from "@/env/validators/env.ts";
+import { info } from "@/log/index.ts";
 
 info("Starting env module...");
 validateEnv(process.env);

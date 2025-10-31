@@ -1,8 +1,8 @@
 import { join } from "node:path";
 
-import { THUMBNAILS_PATH } from "../shared/constants.ts";
-import { downloadAsFile } from "../shared/functions/download.ts";
-import { getAlbumName } from "./getAlbumName.ts";
+import { getAlbumName } from "@/functions/getAlbumName.ts";
+import { THUMBNAILS_PATH } from "@/shared/constants.ts";
+import { downloadAsFile } from "@/shared/functions/download.ts";
 
 /**
  * Downloads a thumbnail from a given URL and saves it to the THUMBNAILS_PATH.

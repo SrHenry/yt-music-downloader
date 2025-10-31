@@ -1,4 +1,4 @@
-import type { OptionsSchema } from "../schemas/Options.ts";
+import type { OptionsSchema } from "@/commands/clear/logs/schemas/Options.ts";
 
 export type ModifiedOptions = {
     time: number;

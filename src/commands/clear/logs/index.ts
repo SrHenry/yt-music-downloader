@@ -8,18 +8,18 @@ import { resolve } from "node:path";
 
 import { Experimental } from "@srhenry/type-utils";
 
-import { __root__ } from "../../../__root__.ts";
-import { extractFullPath } from "../../../shared/functions/extractFullPath.ts";
-import { $do } from "../../../shared/pipelines/do.ts";
-import { listDir } from "../../../shared/pipelines/listDir.ts";
-import { logExceptions } from "../../../shared/pipelines/logExceptions.ts";
-import { map, Mapper } from "../../../shared/pipelines/map.ts";
-import { printMessage } from "../../../shared/pipelines/printMessage.ts";
-import { removeFiles } from "../../../shared/pipelines/removeFiles.ts";
-import { useFilters } from "../../../shared/pipelines/useFilters.ts";
-import { countSucessfullyRemoved } from "../../_shared/pipelines/countSucessfullyRemoved.ts";
-import { parse } from "./pipelines/Options/parse.ts";
-import { validate } from "./pipelines/Options/validate.ts";
+import { __root__ } from "@/__root__.ts";
+import { countSucessfullyRemoved } from "@/commands/_shared/pipelines/countSucessfullyRemoved.ts";
+import { parse } from "@/commands/clear/logs/pipelines/Options/parse.ts";
+import { validate } from "@/commands/clear/logs/pipelines/Options/validate.ts";
+import { extractFullPath } from "@/shared/functions/extractFullPath.ts";
+import { $do } from "@/shared/pipelines/do.ts";
+import { listDir } from "@/shared/pipelines/listDir.ts";
+import { logExceptions } from "@/shared/pipelines/logExceptions.ts";
+import { map, Mapper } from "@/shared/pipelines/map.ts";
+import { printMessage } from "@/shared/pipelines/printMessage.ts";
+import { removeFiles } from "@/shared/pipelines/removeFiles.ts";
+import { useFilters } from "@/shared/pipelines/useFilters.ts";
 
 const logsPath = resolve(__root__, "logs");
 

@@ -1,5 +1,6 @@
 import { object, string } from "@srhenry/type-utils";
-import { exec } from "../shared/functions/exec.ts";
+
+import { exec } from "@/shared/functions/exec.ts";
 
 const hasMessage = object({
     message: string(),

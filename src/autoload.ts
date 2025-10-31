@@ -1,9 +1,9 @@
 import { readdirSync } from "node:fs";
 import { resolve } from "node:path";
 
-import { error } from "./log/index.ts";
-import { isFulfilledResult } from "./shared/functions/isFulfilledResult.ts";
-import { isRejectedResult } from "./shared/functions/isRejectedResult.ts";
+import { error } from "@/log/index.ts";
+import { isFulfilledResult } from "@/shared/functions/isFulfilledResult.ts";
+import { isRejectedResult } from "@/shared/functions/isRejectedResult.ts";
 
 const autoloadFiles = readdirSync(resolve(import.meta.dirname, "../"), {
     recursive: true,

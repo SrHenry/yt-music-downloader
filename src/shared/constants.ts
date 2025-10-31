@@ -1,4 +1,4 @@
-import { Env } from "../env/index.ts";
+import { Env } from "@/env/index.ts";
 
 export const { ROOT_PATH, THUMBNAILS_PATH } = Env;
 

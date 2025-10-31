@@ -1,9 +1,9 @@
 import { rename as move, writeFile } from "node:fs/promises";
 import { basename, resolve } from "node:path";
 
-import { ROOT_PATH } from "../shared/constants.ts";
-import { fileExists } from "../shared/functions/fileExists.ts";
-import { runFFmpeg } from "./runFFmpeg.ts";
+import { runFFmpeg } from "@/functions/runFFmpeg.ts";
+import { ROOT_PATH } from "@/shared/constants.ts";
+import { fileExists } from "@/shared/functions/fileExists.ts";
 
 /**
  * It embeds a thumbnail into a music file. Uses FFmpeg under the hood to achieve it.

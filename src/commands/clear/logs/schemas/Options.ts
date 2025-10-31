@@ -4,11 +4,10 @@ import {
     object,
     string,
     useCustomRules,
+    type GetTypeGuard,
 } from "@srhenry/type-utils";
 
-export type OptionsSchema = import("@srhenry/type-utils").GetTypeGuard<
-    typeof OptionsSchema
->;
+export type OptionsSchema = GetTypeGuard<typeof OptionsSchema>;
 
 const StringNumber = createRule({
     name: "Custom.StringNumber",

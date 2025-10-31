@@ -5,11 +5,10 @@ import {
     string,
     StringRules,
     useCustomRules,
+    type GetTypeGuard,
 } from "@srhenry/type-utils";
 
-export type OptionsSchema = import("@srhenry/type-utils").GetTypeGuard<
-    typeof OptionsSchema
->;
+export type OptionsSchema = GetTypeGuard<typeof OptionsSchema>;
 
 const AllowedExtensionsStringListRule = createRule({
     name: "yt-music-downloader.String.AllowedExtensionsList",

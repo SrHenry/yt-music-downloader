@@ -1,4 +1,4 @@
-import { error } from "../../log/index.ts";
+import { error } from "@/log/index.ts";
 
 function logExceptionsFn<T>(
     formatter: any,

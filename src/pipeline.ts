@@ -1,9 +1,10 @@
 import chalk from "chalk";
-import { downloadMusic } from "./functions/downloadMusic.ts";
-import { embedThumbnail } from "./functions/embedThumbnail.ts";
-import { extractYTContentID } from "./functions/extractYTContentID.ts";
-import { fetchThumbnailIfNotExists } from "./functions/fetchThumbnailIfNotExists.ts";
-import { isValidYTContentID } from "./functions/isValidYTContentID.ts";
+
+import { downloadMusic } from "@/functions/downloadMusic.ts";
+import { embedThumbnail } from "@/functions/embedThumbnail.ts";
+import { extractYTContentID } from "@/functions/extractYTContentID.ts";
+import { fetchThumbnailIfNotExists } from "@/functions/fetchThumbnailIfNotExists.ts";
+import { isValidYTContentID } from "@/functions/isValidYTContentID.ts";
 
 /**
  * Describes the pipeline to download music from YouTube and embed the thumbnail.

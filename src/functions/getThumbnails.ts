@@ -1,4 +1,4 @@
-import { runYtDlp } from "./runYtDlp.ts";
+import { runYtDlp } from "@/functions/runYtDlp.ts";
 
 /**
  * Fetches from the API the thumbnails metadata of a given YouTube source.

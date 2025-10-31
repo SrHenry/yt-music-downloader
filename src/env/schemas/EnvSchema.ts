@@ -1,4 +1,4 @@
-import "../__autoload.ts";
+import "@/env/__autoload.ts";
 
 import { object, string, type GetTypeGuard } from "@srhenry/type-utils";
 

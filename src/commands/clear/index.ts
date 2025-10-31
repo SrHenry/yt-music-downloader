@@ -1,7 +1,7 @@
 import type { Command } from "commander";
 
-import { clearLogsAction } from "./logs/index.ts";
-import { clearMusicAction } from "./music/index.ts";
+import { clearLogsAction } from "@/commands/clear/logs/index.ts";
+import { clearMusicAction } from "@/commands/clear/music/index.ts";
 
 export const createClearCommand = () => (program: Command) => {
     const clear = program

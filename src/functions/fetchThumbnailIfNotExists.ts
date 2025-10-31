@@ -1,9 +1,9 @@
 import { resolve } from "node:path";
 
-import { THUMBNAILS_PATH } from "../shared/constants.ts";
-import { fileExists } from "../shared/functions/fileExists.ts";
-import { fetchThumbnail } from "./fetchThumbnail.ts";
-import { getAlbumName } from "./getAlbumName.ts";
+import { fetchThumbnail } from "@/functions/fetchThumbnail.ts";
+import { getAlbumName } from "@/functions/getAlbumName.ts";
+import { THUMBNAILS_PATH } from "@/shared/constants.ts";
+import { fileExists } from "@/shared/functions/fileExists.ts";
 
 /**
  * Fetches the thumbnail of a YT Source and returns its path

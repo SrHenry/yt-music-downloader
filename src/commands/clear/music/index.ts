@@ -2,19 +2,19 @@ import { Experimental } from "@srhenry/type-utils";
 import type { OptionValues } from "commander";
 import type { Dirent } from "node:fs";
 
+import { __root__ } from "@/__root__.ts";
+import { countSucessfullyRemoved } from "@/commands/_shared/pipelines/countSucessfullyRemoved.ts";
+import { validate } from "@/commands/clear/music/pipelines/Options/validate.ts";
 import { OptionsSchema } from "@/commands/clear/music/schemas/Options.ts";
-import { __root__ } from "../../../__root__.ts";
-import { extractFullPath } from "../../../shared/functions/extractFullPath.ts";
-import { $do } from "../../../shared/pipelines/do.ts";
-import { listDir } from "../../../shared/pipelines/listDir.ts";
-import { logExceptions } from "../../../shared/pipelines/logExceptions.ts";
-import { printMessage } from "../../../shared/pipelines/printMessage.ts";
-import { removeFiles } from "../../../shared/pipelines/removeFiles.ts";
-import { split } from "../../../shared/pipelines/split.ts";
-import { trimList as trim } from "../../../shared/pipelines/trimList.ts";
-import { useFilters } from "../../../shared/pipelines/useFilters.ts";
-import { countSucessfullyRemoved } from "../../_shared/pipelines/countSucessfullyRemoved.ts";
-import { validate } from "./pipelines/Options/validate.ts";
+import { extractFullPath } from "@/shared/functions/extractFullPath.ts";
+import { $do } from "@/shared/pipelines/do.ts";
+import { listDir } from "@/shared/pipelines/listDir.ts";
+import { logExceptions } from "@/shared/pipelines/logExceptions.ts";
+import { printMessage } from "@/shared/pipelines/printMessage.ts";
+import { removeFiles } from "@/shared/pipelines/removeFiles.ts";
+import { split } from "@/shared/pipelines/split.ts";
+import { trimList as trim } from "@/shared/pipelines/trimList.ts";
+import { useFilters } from "@/shared/pipelines/useFilters.ts";
 
 type Predicate<T> =
     | ((value: T, index: number, array: T[]) => boolean)

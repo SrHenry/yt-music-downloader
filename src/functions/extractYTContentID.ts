@@ -1,6 +1,15 @@
-import { error } from "@/log/index.ts";
-import { asNull, Experimental, object, or, string } from "@srhenry/type-utils";
-import { runYtDlp } from "./runYtDlp.ts";
+import {
+    array,
+    asNull,
+    Experimental,
+    object,
+    or,
+    string,
+} from "@srhenry/type-utils";
+
+import { runYtDlp } from "@/functions/runYtDlp.ts";
+
+//TODO: Refactor and abstract this file to more modules
 
 const isMetadata = object({
     id: string(),

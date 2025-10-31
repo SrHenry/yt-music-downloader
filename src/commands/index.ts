@@ -1,9 +1,10 @@
 import { Command } from "commander";
+
 import {
     downloadAction,
     playlistOption,
     sourcesArgument,
-} from "./download/index.ts";
+} from "@/commands/download/index.ts";
 
 export const createWorkflowBaseCommand = () =>
     new Command()

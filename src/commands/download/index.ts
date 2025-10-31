@@ -1,11 +1,11 @@
 import chalk from "chalk";
-
 import { type Command, OptionValues } from "commander";
-import { pipeline } from "../../pipeline.ts";
-import { run } from "../../shared/functions/run.ts";
-import { sources } from "./_arguments/sources.ts";
-import { playlist } from "./_options/playlist.ts";
-import { validate } from "./_options/validators/OptionsValidator.ts";
+
+import { sources } from "@/commands/download/_arguments/sources.ts";
+import { playlist } from "@/commands/download/_options/playlist.ts";
+import { validate } from "@/commands/download/_options/validators/OptionsValidator.ts";
+import { pipeline } from "@/pipeline.ts";
+import { run } from "@/shared/functions/run.ts";
 
 export async function downloadAction(
     sources: string[],
@@ -21,7 +21,7 @@ export async function downloadAction(
     run(async () => {
         for (let i = 0; i < sources.length; i++) {
             const c = i + 1;
-            const yt_src = sources[i];
+            const source = sources[i];
 
             console.log();
             console.log(
@@ -31,7 +31,7 @@ export async function downloadAction(
             console.log();
             console.log();
 
-            await pipeline(yt_src).catch((err) =>
+            await pipeline(source).catch((err) =>
                 console.error(`Error while processing entry #${c}:`, err)
             );
 

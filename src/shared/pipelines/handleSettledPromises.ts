@@ -1,6 +1,6 @@
 import { Experimental } from "@srhenry/type-utils";
 
-import { pass } from "../functions/pass.ts";
+import { pass } from "@/shared/functions/pass.ts";
 
 export type OnFulfilledCallback<T, TResult> = (
     value: T
