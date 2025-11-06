@@ -26,6 +26,48 @@ declare type Prettify<T> = {
     [K in keyof T]: T[K];
 } & {};
 
+type __Requirefy_options<T extends {} = { [x: string]: any }> = {
+    stripNullables?: boolean;
+    recursive?: boolean;
+    properties?: keyof T;
+};
+
+type __Requirefy_Recursive<
+    recursive extends boolean,
+    T extends {}
+> = recursive extends true ? Requirefy<T> : T;
+type __Requirefy_StripNullables<
+    stripNullables extends boolean,
+    T extends {}
+> = stripNullables extends true
+    ? T extends null | infer U
+        ? NonNullable<U>
+        : NonNullable<T>
+    : Exclude<T, undefined>;
+
+declare type Requirefy<
+    T extends {},
+    TOptions extends __Requirefy_options<T> = {
+        stripNullables: false;
+        recursive: false;
+        properties: keyof T;
+    }
+> = Prettify<
+    TOptions["properties"] extends keyof T
+        ? Omit<T, TOptions["properties"]> & {
+              [K in TOptions["properties"]]-?: __Requirefy_Recursive<
+                  TOptions["recursive"],
+                  __Requirefy_StripNullables<TOptions["stripNullables"], T[K]>
+              >;
+          }
+        : {
+              [K in keyof T]-?: __Requirefy_Recursive<
+                  TOptions["recursive"],
+                  __Requirefy_StripNullables<TOptions["stripNullables"], T[K]>
+              >;
+          }
+>;
+
 declare type TypeOfTag =
     | "undefined"
     | "boolean"
@@ -35,3 +77,58 @@ declare type TypeOfTag =
     | "symbol"
     | "object"
     | "function";
+
+type ObjectKeys<T> = T extends object
+    ? (keyof T)[]
+    : T extends number
+    ? []
+    : T extends Array<any> | string
+    ? string[]
+    : never;
+
+type Fallback<T, TO, Includes = never> = T extends never | Includes ? TO : T;
+
+type ObjectEntry<T extends {}> = {
+    [K in keyof T]: [K, T[K]];
+}[keyof T];
+type ObjectEntries<T extends {}> = ObjectEntry<T>[];
+type Entry<T> = T extends any[]
+    ? T
+    : T extends {}
+    ? ObjectEntry<T>
+    : [string, any];
+type Entries<T> = T extends any[]
+    ? T
+    : T extends {}
+    ? ObjectEntries<T>
+    : [string, any][];
+
+type ObjectValue<T> = T extends any[]
+    ? T
+    : T extends {}
+    ? ObjectEntry<T> extends [any, infer TValue]
+        ? TValue
+        : never
+    : never;
+
+type ObjectValues<T extends {}> = ObjectValue<T>[];
+type Value<T> = T extends any[] ? T : T extends {} ? ObjectValue<T> : any[];
+type Values<T> = T extends any[] ? T : T extends {} ? ObjectValues<T> : any[];
+
+interface ObjectConstructor {
+    keys<T>(o: T): (keyof T)[];
+    keys<T>(o: T): Fallback<ObjectKeys<T>, string[], never[]>;
+    // entries<T extends object>(o: T): [keyof T, T[keyof T]][]
+    entries<T extends {}>(o: T): ObjectEntries<T>;
+    // entries<T>(o: ArrayLike<T>): [string, T][]
+    values<T>(o: T): T[keyof T][];
+    fromEntries<T extends {}>(o: ObjectEntry<T>[]): T;
+}
+
+declare const Object: ObjectConstructor;
+
+interface ArrayConstructor {
+    isArray<T = any>(arg: any): arg is T[];
+}
+
+declare var Array: ArrayConstructor;

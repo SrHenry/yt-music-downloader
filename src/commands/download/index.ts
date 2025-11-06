@@ -1,52 +1,17 @@
-import chalk from "chalk";
-import { type Command, OptionValues } from "commander";
+import type { Command } from "commander";
 
 import { sources } from "@/commands/download/_arguments/sources.ts";
+import { noDefaultArgs } from "@/commands/download/_options/noDefaultArgs.ts";
+import { noProcessing } from "@/commands/download/_options/noProcessing.ts";
+import { noThumbnail } from "@/commands/download/_options/noThumbnail.ts";
 import { playlist } from "@/commands/download/_options/playlist.ts";
-import { validate } from "@/commands/download/_options/validators/OptionsValidator.ts";
-import { pipeline } from "@/pipeline.ts";
-import { run } from "@/shared/functions/run.ts";
+import { downloadAction } from "@/commands/download/downloadAction.ts";
 
-export async function downloadAction(
-    sources: string[],
-    _options: OptionValues
-) {
-    const { playlist } = validate(_options);
-
-    if (playlist) {
-        // TODO: implement playlist parsing & download
-        throw new Error("PANIC! Not implemented yet");
-    }
-
-    run(async () => {
-        for (let i = 0; i < sources.length; i++) {
-            const c = i + 1;
-            const source = sources[i];
-
-            console.log();
-            console.log(
-                "================================================================================"
-            );
-            console.log(`Processing (${c}/${sources.length}):`);
-            console.log();
-            console.log();
-
-            await pipeline(source).catch((err) =>
-                console.error(`Error while processing entry #${c}:`, err)
-            );
-
-            console.log(
-                "================================================================================"
-            );
-            console.log();
-            console.log();
-        }
-
-        console.log(chalk.green("All done!"));
-    });
-}
-
-export { playlist as playlistOption, sources as sourcesArgument };
+export {
+    downloadAction,
+    playlist as playlistOption,
+    sources as sourcesArgument,
+};
 
 export const createDownloadCommand = () => (program: Command) => {
     const download = program.command("download");
@@ -57,6 +22,9 @@ export const createDownloadCommand = () => (program: Command) => {
         )
         .addArgument(sources)
         .addOption(playlist)
+        .addOption(noThumbnail)
+        .addOption(noProcessing)
+        .addOption(noDefaultArgs)
         .action(downloadAction);
 
     return program;

@@ -1,1 +1,1 @@
-node src/workflow.js clear logs $@
+npx tsx src/workflow.ts clear logs $@

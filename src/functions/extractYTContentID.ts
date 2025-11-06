@@ -1,10 +1,7 @@
 import {
-    array,
-    asNull,
     Experimental,
     type GetTypeGuard,
     object,
-    or,
     string,
 } from "@srhenry/type-utils";
 
@@ -16,12 +13,7 @@ import { error, info } from "@/log/index.ts";
 const MetadataSchema = () =>
     object({
         id: string(),
-        playlist_id: or.optional(string(), asNull()),
     });
-const MetadataArraySchema = () => array(MetadataSchema());
-
-const isEmptyArray = <T = unknown>(arr: Array<T>) => arr.length === 0;
-const hasOneElement = <T = unknown>(arr: Array<T>) => arr.length === 1;
 
 type Metadata = GetTypeGuard<ReturnType<typeof MetadataSchema>>;
 type MetadataValidationError = Experimental.ValidationError<
@@ -32,14 +24,10 @@ type MetadataValidationError = Experimental.ValidationError<
 const validateMetadata = (
     metadata: unknown
 ): Experimental.Result<
-    Metadata[],
+    Metadata,
     Experimental.ValidationErrors<MetadataValidationError[]>
 > => {
-    const result = Experimental.validate(
-        metadata,
-        MetadataArraySchema(),
-        false
-    );
+    const result = Experimental.validate(metadata, MetadataSchema(), false);
 
     return result instanceof Experimental.ValidationErrors
         ? [
@@ -48,9 +36,6 @@ const validateMetadata = (
           ]
         : [null, result];
 };
-
-const parseOutputAsJson = (output: string) =>
-    output.split("\n").map((row) => JSON.parse(row));
 
 /**
  * It fetches the YouTube ID from a YouTube source
@@ -65,18 +50,13 @@ export async function extractYTContentID(yt_src: string) {
         "--quiet",
         "--flat-playlist",
         "--no-warnings",
-        "-j",
+        "-J",
     ];
 
     info("[progress] [fn:%s] Fetching metadata...", runYtDlp.name);
 
     const output = await runYtDlp(...args, yt_src);
-    const metadata = parseOutputAsJson(output);
-
-    info("[progress] [fn:%s] Validating metadata...", isEmptyArray.name);
-
-    if (isEmptyArray(metadata))
-        throw new Error("Could not retrieve JSON from yt-dlp.");
+    const metadata = JSON.parse(output);
 
     info("[progress] [fn:%s] Validating metadata...", validateMetadata.name);
 
@@ -91,12 +71,5 @@ export async function extractYTContentID(yt_src: string) {
         throw new TypeError("Unexpected medatata value. Missing properties.");
     }
 
-    info(
-        "[progress] [fn:%s] Metadata validated sucessfully! Fetching ID/Playlist ID...",
-        hasOneElement.name
-    );
-
-    if (hasOneElement(validatedMetadata)) return validatedMetadata[0].id;
-
-    return validatedMetadata[0].playlist_id!;
+    return validatedMetadata.id;
 }

@@ -1,1 +1,1 @@
-npx tsx src/workflow.js $@
+npx tsx src/workflow.ts $@
