@@ -9,6 +9,9 @@ export function mapToPipelineOptions(o: CommandOptions): DownloadOptions {
     builder.noThumbnail = !o.thumbnail;
     builder.skipDefaultArgs = !o.defaultArgs;
 
+    if (o.outputDir)
+        builder.outputDir = o.outputDir.replace(/^\=["']?(.*)["']?$/, "$1");
+
     if (o.ytDlpArgs.length !== 0) builder.ytDlpArgs = o.ytDlpArgs;
 
     return builder;

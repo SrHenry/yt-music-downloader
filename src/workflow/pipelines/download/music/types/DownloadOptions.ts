@@ -13,4 +13,7 @@ export type DownloadOptions = {
 
     /** list of arguments to pass to yt-dlp */
     ytDlpArgs?: string[];
+
+    /** informs the program where to download music files */
+    outputDir?: string | null;
 };

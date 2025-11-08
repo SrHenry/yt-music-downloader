@@ -23,6 +23,7 @@ export async function downloadAction(
         .pipe(enpipe(options))
         .pipe(append({ ytDlpArgs: fetchExtraArgs() }))
         .pipe(mapToPipelineOptions)
+        // .pipe($do<DownloadOptions>(console.log.bind(null, "\nOptions:")))
         .pipe(
             transform(
                 (options) =>
