@@ -1,26 +1,27 @@
-import { Experimental } from "@srhenry/type-utils";
+import { Experimental, type Result } from "@srhenry/type-utils";
 
-import { getMetadata } from "@/functions/getMetadata.ts";
-import { error } from "@/log/index.ts";
-import {
+import type {
     Initializer,
     Input,
     Output,
 } from "@/workflow/pipelines/download/music/pipeline/steps/fetchPlaylistContentList/types/index.ts";
-import { StepFactory } from "@/workflow/pipelines/types/StepFactory.ts";
-import { YouTubePlaylistMetadataSchema } from "../../../schemas/YouTubePlaylistMetadataSchema.ts";
-import { YouTubePlaylistMetadata } from "../../../types/YouTubePlaylistMetadata.ts";
+import type { StepFactory } from "@/workflow/pipelines/types/StepFactory.ts";
+import type { YouTubePlaylistMetadata } from "../../../types/YouTubePlaylistMetadata.ts";
 
-type MetadataValidationError = Experimental.ValidationError<
+import { getMetadata } from "@/functions/getMetadata.ts";
+import { error } from "@/log/index.ts";
+import { YouTubePlaylistMetadataSchema } from "../../../schemas/YouTubePlaylistMetadataSchema.ts";
+
+type MetadataValidationError = Experimental.validators.ValidationError<
     unknown,
     YouTubePlaylistMetadata
 >;
 
 const validateMetadata = (
     metadata: unknown
-): Experimental.Result<
+): Result<
     YouTubePlaylistMetadata,
-    Experimental.ValidationErrors<MetadataValidationError[]>
+    Experimental.validators.ValidationErrors<MetadataValidationError[]>
 > => {
     const result = Experimental.validate(
         metadata,
@@ -28,9 +29,11 @@ const validateMetadata = (
         false
     );
 
-    return result instanceof Experimental.ValidationErrors
+    return result instanceof Experimental.validators.ValidationErrors
         ? [
-              <Experimental.ValidationErrors<MetadataValidationError[]>>result,
+              result as Experimental.validators.ValidationErrors<
+                  MetadataValidationError[]
+              >,
               null,
           ]
         : [null, result];

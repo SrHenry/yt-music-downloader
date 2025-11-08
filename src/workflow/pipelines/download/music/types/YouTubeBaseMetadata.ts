@@ -1,6 +1,6 @@
-import { GetTypeGuard } from "@srhenry/type-utils";
+import type { GetTypeGuard } from "@srhenry/type-utils";
 
-import { YouTubeBaseMetadataSchema } from "@/workflow/pipelines/download/music/schemas/YouTubeBaseMetadataSchema.ts";
+import type { YouTubeBaseMetadataSchema } from "@/workflow/pipelines/download/music/schemas/YouTubeBaseMetadataSchema.ts";
 
 export type YouTubeBaseMetadata = GetTypeGuard<
     ReturnType<typeof YouTubeBaseMetadataSchema>

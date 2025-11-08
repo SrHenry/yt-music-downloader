@@ -2,7 +2,7 @@ import type { Fn, Fn1, TupleTools, TypeGuard } from "@srhenry/type-utils";
 
 import { asTypeGuard, Experimental, helpers, tuple } from "@srhenry/type-utils";
 
-const isUnaryFunction = asTypeGuard<Experimental.types.Func1<any, any>>(
+const isUnaryFunction = asTypeGuard<Fn1<any, any>>(
     (value) => helpers.isFunction(value) && value.length === 1
 );
 
