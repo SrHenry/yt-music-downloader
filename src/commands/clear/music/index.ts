@@ -21,6 +21,7 @@ type Predicate<T> =
     | (<S extends T>(value: T, index: number, array: T[]) => value is S);
 
 const musicPath = __root__;
+const { pipe } = Experimental;
 
 const useAllowedExtensions = (allowedExtensions: string[]) => (file: Dirent) =>
     file.isFile() &&
@@ -40,7 +41,7 @@ const getAllowedExtensionsList =
         allowedExtensions;
 
 export const clearMusic = () => (filter: Predicate<Dirent>) =>
-    Experimental.pipe(musicPath)
+    pipe(musicPath)
         .pipe(listDir({ recursive: false }))
         .pipeAsync(useFilters([filter]))
         .pipeAsync(getPaths())
@@ -51,7 +52,7 @@ export const clearMusic = () => (filter: Predicate<Dirent>) =>
         .depipe();
 
 export const clearMusicAction = (options: OptionValues) =>
-    Experimental.pipe(options)
+    pipe(options)
         .pipe(validate())
         .pipe(getAllowedExtensionsList())
         .pipe(split(","))

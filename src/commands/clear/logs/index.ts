@@ -22,6 +22,7 @@ import { removeFiles } from "@/shared/pipelines/removeFiles.ts";
 import { useFilters } from "@/shared/pipelines/useFilters.ts";
 
 const logsPath = resolve(__root__, "logs");
+const { pipe } = Experimental;
 
 const filterLogsByExtension =
     (extension = ".log") =>
@@ -85,7 +86,7 @@ const getTime =
         time;
 
 const clearLogs = () => (time: number) =>
-    Experimental.pipe(logsPath)
+    pipe(logsPath)
         .pipe(listDir())
         .pipeAsync(filterLogsByExtension())
         .pipeAsync(getStats())
@@ -98,7 +99,7 @@ const clearLogs = () => (time: number) =>
         .depipe();
 
 export const clearLogsAction = (options: OptionValues) =>
-    Experimental.pipe(options)
+    pipe(options)
         .pipe(validate())
         .pipe(parse())
         .pipe(getTime())
