@@ -2,6 +2,7 @@ import {
     boolean,
     Experimental,
     object,
+    string,
     type GetTypeGuard,
 } from "@srhenry/type-utils";
 
@@ -12,6 +13,7 @@ const OptionsSchema = object({
     thumbnail: boolean(),
     processing: boolean(),
     defaultArgs: boolean(),
+    outputDir: string.optional(),
 });
 
 Experimental.Validator.setValidatorMessage(
@@ -20,6 +22,7 @@ Experimental.Validator.setValidatorMessage(
         thumbnail: "incorrect option value",
         processing: "incorrect option value",
         defaultArgs: "incorrect option value",
+        outputDir: "incorrect option value",
     },
     OptionsSchema
 );

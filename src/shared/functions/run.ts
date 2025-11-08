@@ -1,3 +1,3 @@
-import { Experimental } from "@srhenry/type-utils";
+import { Fn0 } from "@srhenry/type-utils";
 
-export const run = <T>(fn: Experimental.Func0<T>) => fn();
+export const run = <T>(fn: Fn0<T>) => fn();

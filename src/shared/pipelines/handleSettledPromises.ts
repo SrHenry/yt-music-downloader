@@ -11,7 +11,7 @@ export type OnRejectedCallback<TResult> = (
 ) => TResult | PromiseLike<TResult>;
 
 type processResultsFn<T, TFulfulledResult, TRejectedResult> =
-    Experimental.AsLambda<
+    Experimental.types.AsLambda<
         (
             results: PromiseSettledResult<T>[]
         ) => [

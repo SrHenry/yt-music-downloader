@@ -2,21 +2,18 @@ import type {
     AsyncFn,
     AsyncFn1,
     Fn,
+    Fn1,
     TupleTools,
     TypeGuard,
 } from "@srhenry/type-utils";
 
 import { asTypeGuard, Experimental, helpers, tuple } from "@srhenry/type-utils";
 
-const isUnaryFunction = asTypeGuard<Experimental.types.Func1<any, any>>(
+const isUnaryFunction = asTypeGuard<Fn1<any, any>>(
     (value) => helpers.isFunction(value) && value.length === 1
 );
 
 const unaryFn = () => isUnaryFunction;
-// const func = <T extends number>(params: T,) =>
-//     asTypeGuard<Fn<TupleTools.CreateTuple<T>, any>>(
-//         (value) => helpers.isFunction(value) && value.length === params
-//     );
 
 type MapFuncGuards<TParams extends [...number[]]> = TParams extends [
     infer T extends number,
@@ -42,24 +39,26 @@ const is_selector_fn = tuple(unaryFn(), func(1, 2, 3, 4));
 
 const { $switch } = Experimental;
 
-export function forEachAsync<T>(fn: AsyncFn1<T, unknown>): AsyncFn1<T[], void>;
+export function forEachAsync<T>(
+    fn: AsyncFn<[item: T], unknown>
+): AsyncFn1<Iterable<T> | AsyncIterable<T>, void>;
 export function forEachAsync<T, U>(
-    selector: Fn<[from: T], U[]>,
+    selector: Fn<[from: T], Iterable<U> | AsyncIterable<U>>,
     fn: AsyncFn<
         [item: U, from: T, index: number, total: number | null],
         unknown
     >
 ): AsyncFn1<T, void>;
-// export function forEachAsync<T, U>(
-//     selector: Fn1<T, U[]>,
-//     fn: AsyncFn2<U, T, unknown>
-// ): AsyncFn1<T, void>;
 
 export function forEachAsync(...args: unknown[]) {
     return $switch()
-        .case(is_fn, ([fn]) => async (list: unknown[]) => {
-            for await (const e of list) await fn(e);
-        })
+        .case(
+            is_fn,
+            ([fn]) =>
+                async (list: Iterable<unknown> | AsyncIterable<unknown>) => {
+                    for await (const e of list) await fn(e);
+                }
+        )
         .case(is_selector_fn, ([selector, fn]) => async (value: unknown) => {
             let i = 0;
             for await (const e of selector(value))

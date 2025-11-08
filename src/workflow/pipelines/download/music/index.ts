@@ -6,7 +6,9 @@ import chalk from "chalk";
 import type { DownloadOptions } from "@/workflow/pipelines/download/music/types/DownloadOptions.ts";
 
 import { printProcessingEntry } from "@/functions/printProcessingEntry.ts";
+import { exec } from "@/shared/functions/exec.ts";
 import { append } from "@/shared/pipelines/append.ts";
+import { $doAsync } from "@/shared/pipelines/do.ts";
 import { enpipeIf } from "@/shared/pipelines/enpipeIf.ts";
 import { forEachAsync } from "@/shared/pipelines/forEachAsync.ts";
 import DefaultOptions from "@/workflow/pipelines/download/music/constants/DefaultDownloadOptions.ts";
@@ -17,9 +19,8 @@ import { finish } from "@/workflow/pipelines/download/music/pipeline/steps/finis
 import { validateSource } from "@/workflow/pipelines/download/music/pipeline/steps/validateSource/index.ts";
 import { fetchPlaylistContentList } from "./pipeline/steps/fetchPlaylistContentList/index.ts";
 
-type Pipeline = (
-    options: Requirefy<DownloadOptions>
-) => (source: string) => Promise<void>;
+type RequiredOptions = Requirefy<DownloadOptions>;
+type Pipeline = (options: RequiredOptions) => (source: string) => Promise<void>;
 
 const noProcessingParams = [
     "-q",
@@ -32,17 +33,12 @@ const noProcessingParams = [
     "after_move:filepath",
 ];
 
-const fillNullables = (
-    defaults: Requirefy<DownloadOptions>,
-    options: DownloadOptions
-) => {
+const fillNullables = (defaults: RequiredOptions, options: DownloadOptions) => {
     const keys = Object.keys(defaults);
     return keys.map((key) => [key, options[key] ?? defaults[key]] as const);
 };
 
-const parseOptions = (
-    options?: DownloadOptions | null
-): Requirefy<DownloadOptions> =>
+const parseOptions = (options?: DownloadOptions | null): RequiredOptions =>
     options
         ? pipe(options)
               .pipe(enpipe(fillNullables, DefaultOptions))
@@ -50,68 +46,81 @@ const parseOptions = (
               .depipe()
         : DefaultOptions;
 
-const musicPipeline: Pipeline =
-    ({ noThumbnail, skipDefaultArgs, ytDlpArgs, noProcessing }) =>
-    (source) =>
-        pipe(Promise.resolve(source))
-            .pipeAsync(validateSource())
-            .pipeAsync(
-                enpipeIf(
-                    !noThumbnail,
-                    fetchThumbnail(),
-                    append({ thumbnail_file: null })
-                )
-            )
-            .pipeAsync(
-                fetchMusic({
-                    skipDefaultArgs,
-                    ytDlpArgs: noProcessing
-                        ? [...noProcessingParams, ...ytDlpArgs]
-                        : ytDlpArgs,
-                })
-            )
-            .pipeAsync(enpipeIf(!noThumbnail, embedThumbnail()))
-            .pipeAsync(finish())
-            .depipe();
+const parseYtDlpParams = ({
+    noProcessing,
+    outputDir,
+    ytDlpArgs,
+}: Pick<RequiredOptions, "noProcessing" | "outputDir" | "ytDlpArgs">) => {
+    const params: string[] = [];
 
-const playlistPipeline: Pipeline =
-    ({ noThumbnail, skipDefaultArgs, ytDlpArgs, noProcessing }) =>
-    (source) =>
-        pipe(Promise.resolve(source))
-            .pipeAsync(validateSource())
-            .pipeAsync(fetchPlaylistContentList())
-            .pipeAsync(
-                forEachAsync(
-                    (ctx) => ctx.metadata.entries,
-                    ({ id: yt_src }, _, i, total) =>
-                        printProcessingEntry(i + 1, total, () =>
-                            pipe(Promise.resolve({ yt_src }))
-                                .pipeAsync(
-                                    enpipeIf(
-                                        !noThumbnail,
-                                        fetchThumbnail(),
-                                        append({ thumbnail_file: null })
-                                    )
-                                )
-                                .pipeAsync(
-                                    fetchMusic({
-                                        skipDefaultArgs,
-                                        ytDlpArgs: noProcessing
-                                            ? [
-                                                  ...noProcessingParams,
-                                                  ...ytDlpArgs,
-                                              ]
-                                            : ytDlpArgs,
-                                    })
-                                )
-                                .pipeAsync(
-                                    enpipeIf(!noThumbnail, embedThumbnail())
-                                )
-                        )
-                )
+    if (outputDir) params.push("-P", outputDir);
+
+    if (noProcessing) params.push(...noProcessingParams);
+
+    params.push(...ytDlpArgs);
+
+    return params;
+};
+
+const parseFetchArgs = (options: RequiredOptions) => ({
+    ...options,
+    ytDlpArgs: parseYtDlpParams(options),
+    skipDefaultArgs: options.noProcessing || options.skipDefaultArgs,
+});
+
+const musicPipeline: Pipeline = (options) => (source) =>
+    pipe(Promise.resolve(source))
+        .pipeAsync(validateSource())
+        .pipeAsync(
+            enpipeIf(
+                !options.noThumbnail,
+                fetchThumbnail(),
+                append({ thumbnail_file: null })
             )
-            .pipeAsync(finish())
-            .depipe();
+        )
+        .pipeAsync(
+            $doAsync(async () => {
+                if (options.outputDir)
+                    await exec("mkdir -p", options.outputDir);
+            })
+        )
+        .pipeAsync(fetchMusic(parseFetchArgs(options)))
+        .pipeAsync(enpipeIf(!options.noThumbnail, embedThumbnail()))
+        .pipeAsync(finish())
+        .depipe();
+
+const playlistPipeline: Pipeline = (options) => (source) =>
+    pipe(Promise.resolve(source))
+        .pipeAsync(validateSource())
+        .pipeAsync(fetchPlaylistContentList())
+        .pipeAsync(
+            $doAsync(async ({ metadata: { entries } }) => {
+                if (entries.length > 0 && options.outputDir)
+                    await exec("mkdir -p", options.outputDir);
+            })
+        )
+        .pipeAsync(
+            forEachAsync(
+                (ctx) => ctx.metadata.entries,
+                ({ id: yt_src }, _, i, total) =>
+                    printProcessingEntry(i + 1, total, () =>
+                        pipe(Promise.resolve({ yt_src }))
+                            .pipeAsync(
+                                enpipeIf(
+                                    !options.noThumbnail,
+                                    fetchThumbnail(),
+                                    append({ thumbnail_file: null })
+                                )
+                            )
+                            .pipeAsync(fetchMusic(parseFetchArgs(options)))
+                            .pipeAsync(
+                                enpipeIf(!options.noThumbnail, embedThumbnail())
+                            )
+                    )
+            )
+        )
+        .pipeAsync(finish())
+        .depipe();
 
 const printError = (error: unknown) => console.error(chalk.redBright(error));
 

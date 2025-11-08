@@ -10,18 +10,17 @@ import { downloadMusic } from "@/functions/downloadMusic.ts";
 export const fetchMusic: StepFactory<[Input, Output], Initializer> =
     (fetchArgs = null) =>
     async ({ yt_src, thumbnail_file: thumbnail }) => {
-        let action: () => Promise<string>;
+        let action = () => downloadMusic(yt_src);
 
         console.log("Downloading music...");
         if (fetchArgs) {
             if (fetchArgs.ytDlpArgs)
                 action = () => downloadMusic(yt_src, fetchArgs.ytDlpArgs);
+
             if (fetchArgs.skipDefaultArgs)
                 action = () =>
                     downloadMusic(yt_src, fetchArgs.ytDlpArgs ?? [], true);
         }
-
-        action = () => downloadMusic(yt_src);
 
         const music_file = await action();
         console.log("Music downloaded!");

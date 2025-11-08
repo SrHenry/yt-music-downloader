@@ -1,4 +1,4 @@
-import { string, TypeGuard } from "@srhenry/type-utils";
+import { string, type TypeGuard } from "@srhenry/type-utils";
 
 type Resolution = `${number}x${number}`;
 

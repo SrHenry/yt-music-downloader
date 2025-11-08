@@ -1,4 +1,4 @@
-import { Experimental } from "@srhenry/type-utils";
+import { Experimental, type Fn1 } from "@srhenry/type-utils";
 
 const argExp = /:{([a-zA-Z0-9]+)}/g;
 
@@ -20,15 +20,14 @@ function useArgs<
     ) as GetTemplateTupleArgs<Formatter, Args>;
 
     return Experimental.lambda(
-        <TCallback extends Experimental.Func1<typeof newArgs, any>>(
-            callback: TCallback
-        ) => callback(newArgs)
+        <TCallback extends Fn1<typeof newArgs, any>>(callback: TCallback) =>
+            callback(newArgs)
     );
 }
 
 export function printMessage<Message extends string>(
     message: Message
-): Experimental.AsLambda<
+): Experimental.types.AsLambda<
     <ArgTypes extends GetTemplateTuple<Message>>(
         args: GetTemplateTupleArgs<Message, ArgTypes>
     ) => void

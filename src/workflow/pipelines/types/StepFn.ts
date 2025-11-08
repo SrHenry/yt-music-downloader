@@ -1,6 +1,3 @@
-import { Experimental } from "@srhenry/type-utils";
+import type { AsyncFn } from "@srhenry/type-utils";
 
-export type StepFn<TInput, TOutput> = Experimental.types.AsyncFunc<
-    [input: TInput],
-    TOutput
->;
+export type StepFn<TInput, TOutput> = AsyncFn<[input: TInput], TOutput>;
