@@ -116,10 +116,10 @@ const playlistPipeline: Pipeline = (options) => (source) =>
                             .pipeAsync(
                                 enpipeIf(!options.noThumbnail, embedThumbnail())
                             )
+                            .pipeAsync(finish())
                     )
             )
         )
-        .pipeAsync(finish())
         .depipe();
 
 const printError = (error: unknown) => console.error(chalk.redBright(error));

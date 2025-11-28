@@ -12,8 +12,8 @@ export async function processDownload(
                 console.error(`Error while processing playlist:`, err)
             );
 
-        if (options.playlist) return await run();
+        if (options.playlist) await run();
 
-        return await printProcessingEntry(c, sources.length, run);
+        await printProcessingEntry(c, sources.length, run);
     }
 }
