@@ -3,31 +3,29 @@ import {
     Experimental,
     object,
     string,
-    useCustomRules,
-    type GetTypeGuard,
+    type Infer,
 } from "@srhenry/type-utils";
 
-export type OptionsSchema = GetTypeGuard<typeof OptionsSchema>;
+export type OptionsSchema = Infer<typeof OptionsSchema>;
 
 const StringNumber = createRule({
-    name: "Custom.StringNumber",
+    name: "yt-music-downloader.String.StringNumber",
     message: "number",
     handler: (value: string) => () => !Number.isNaN(Number(value)),
 });
 const Integer = createRule({
-    name: "Custom.StringNumber.Integer",
+    name: "yt-music-downloader.String.StringNumber.Integer",
     message: "int",
     handler: (value: string) => () => Number.isInteger(Number(value)),
 });
 
 const Positive = createRule({
-    name: "Custom.StringNumber.Positive",
+    name: "yt-music-downloader.String.StringNumber.Positive",
     message: "positive",
     handler: (value: string) => () => Number(value) > 0,
 });
 
-const Time = () =>
-    useCustomRules(string(), StringNumber(), Integer(), Positive());
+const Time = () => string().use(StringNumber()).use(Integer()).use(Positive());
 
 const OptionsSchema = object({
     time: Time(),

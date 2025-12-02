@@ -3,18 +3,18 @@ import {
     Experimental,
     object,
     string,
-    type GetTypeGuard,
+    type Infer,
 } from "@srhenry/type-utils";
 
-export type OptionsSchema = GetTypeGuard<typeof OptionsSchema>;
+export type OptionsSchema = Infer<typeof OptionsSchema>;
 
 const OptionsSchema = object({
     playlist: boolean(),
     thumbnail: boolean(),
     processing: boolean(),
     defaultArgs: boolean(),
-    outputDir: string.optional(),
-    thumbnailsDir: string.optional(),
+    outputDir: string().optional(),
+    thumbnailsDir: string().optional(),
 });
 
 Experimental.Validator.setValidatorMessage(

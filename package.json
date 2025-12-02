@@ -18,10 +18,10 @@
     "type": "module",
     "devDependencies": {
         "@eslint/js": "^9.39.1",
-        "@swc/core": "^1.15.0",
+        "@swc/core": "^1.15.3",
         "@swc/helpers": "^0.5.17",
         "@types/debug": "^4.1.12",
-        "@types/node": "^24.10.0",
+        "@types/node": "^24.10.1",
         "eslint": "^9.39.1",
         "globals": "^16.5.0",
         "run-script-os": "^1.1.6",
@@ -30,11 +30,11 @@
         "typescript": "^5.9.3"
     },
     "dependencies": {
-        "@srhenry/type-utils": "https://github.com/SrHenry/type-utils/releases/download/v0.5.10/type-utils-0.5.10.tgz",
+        "@srhenry/type-utils": "^0.6.0",
         "chalk": "^5.6.2",
         "commander": "^14.0.2",
         "debug": "^4.4.3",
         "dotenv": "^17.2.3",
-        "tsx": "^4.20.6"
+        "tsx": "^4.21.0"
     }
 }
