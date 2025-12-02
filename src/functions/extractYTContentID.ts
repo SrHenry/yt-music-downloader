@@ -1,9 +1,4 @@
-import {
-    Experimental,
-    type GetTypeGuard,
-    object,
-    string,
-} from "@srhenry/type-utils";
+import { Experimental, type Infer, object, string } from "@srhenry/type-utils";
 
 import { runYtDlp } from "@/functions/runYtDlp.ts";
 import { error, info } from "@/log/index.ts";
@@ -15,7 +10,7 @@ const MetadataSchema = () =>
         id: string(),
     });
 
-type Metadata = GetTypeGuard<ReturnType<typeof MetadataSchema>>;
+type Metadata = Infer<ReturnType<typeof MetadataSchema>>;
 type MetadataValidationError = Experimental.ValidationError<
     unknown,
     Metadata[]
