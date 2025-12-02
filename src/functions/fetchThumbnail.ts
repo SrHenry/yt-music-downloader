@@ -25,9 +25,26 @@ export async function fetchThumbnail(
     albumName: string
 ): Promise<string>;
 
+export async function fetchThumbnail(yt_src: string): Promise<string>;
+
+/**
+ * Fetch the thumbnail from a music YouTube Source
+ *
+ * @param yt_src Music source
+ * @param albumName Album name to name the Cover Art (thumbnail)
+ *
+ * @returns A promise with a string path to the thumbnail file.
+ */
 export async function fetchThumbnail(
     yt_src: string,
-    albumName: string | null = null
+    albumName: string | null,
+    thumbnailDir: string | null
+): Promise<string>;
+
+export async function fetchThumbnail(
+    yt_src: string,
+    albumName: string | null = null,
+    thumbnailDir: string | null = null
 ): Promise<string> {
     if (albumName === null) {
         albumName = await getAlbumName(yt_src);
@@ -58,7 +75,12 @@ export async function fetchThumbnail(
     );
 
     console.log("Downloading thumbnail...");
-    const path = await downloadThumbnail(yt_src, thumbnail, albumName);
+    const path = await downloadThumbnail(
+        yt_src,
+        thumbnail,
+        albumName,
+        thumbnailDir
+    );
     console.log("Thumbnail downloaded!");
 
     return path;

@@ -14,13 +14,31 @@ import { fileExists } from "@/shared/functions/fileExists.ts";
  */
 export async function fetchThumbnailIfNotExists(
     yt_src: string
+): Promise<string>;
+
+/**
+ * Fetches the thumbnail of a YT Source and returns its path
+ *
+ * @param yt_src Music source
+ * @param thumbnailDir Directory to save the thumbnail
+ *
+ * @returns A promise with the string path to the thumbnail file.
+ */
+export async function fetchThumbnailIfNotExists(
+    yt_src: string,
+    thumbnailDir: string | null
+): Promise<string>;
+
+export async function fetchThumbnailIfNotExists(
+    yt_src: string,
+    thumbnailDir: string | null = null
 ): Promise<string> {
     console.log("Fetching album name...");
     const albumName = await getAlbumName(yt_src);
 
     console.log("Album Name:", albumName);
 
-    const path = resolve(THUMBNAILS_PATH, `${albumName}.jpg`);
+    const path = resolve(thumbnailDir ?? THUMBNAILS_PATH, `${albumName}.jpg`);
 
     console.log("Checking if thumbnail is already downloaded...");
 
@@ -29,5 +47,5 @@ export async function fetchThumbnailIfNotExists(
         return path;
     }
 
-    return fetchThumbnail(yt_src, albumName);
+    return fetchThumbnail(yt_src, albumName, thumbnailDir);
 }

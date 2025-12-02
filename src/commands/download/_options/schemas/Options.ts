@@ -14,6 +14,7 @@ const OptionsSchema = object({
     processing: boolean(),
     defaultArgs: boolean(),
     outputDir: string.optional(),
+    thumbnailsDir: string.optional(),
 });
 
 Experimental.Validator.setValidatorMessage(
@@ -23,6 +24,7 @@ Experimental.Validator.setValidatorMessage(
         processing: "incorrect option value",
         defaultArgs: "incorrect option value",
         outputDir: "incorrect option value",
+        thumbnailsDir: "incorrect option value",
     },
     OptionsSchema
 );

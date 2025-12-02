@@ -8,4 +8,4 @@ export type Output = Prettify<
     }
 >;
 
-export type Initializer = [];
+export type Initializer = [thumbnailDir: string | null] | [];

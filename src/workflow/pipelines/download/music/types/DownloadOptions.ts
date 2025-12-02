@@ -16,4 +16,7 @@ export type DownloadOptions = {
 
     /** informs the program where to download music files */
     outputDir?: string | null;
+
+    /** informs the program where to download thumbnail files */
+    thumbnailsDir?: string | null;
 };

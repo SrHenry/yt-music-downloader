@@ -74,7 +74,7 @@ const musicPipeline: Pipeline = (options) => (source) =>
         .pipeAsync(
             enpipeIf(
                 !options.noThumbnail,
-                fetchThumbnail(),
+                fetchThumbnail(options.thumbnailsDir),
                 append({ thumbnail_file: null })
             )
         )
@@ -108,7 +108,7 @@ const playlistPipeline: Pipeline = (options) => (source) =>
                             .pipeAsync(
                                 enpipeIf(
                                     !options.noThumbnail,
-                                    fetchThumbnail(),
+                                    fetchThumbnail(options.thumbnailsDir),
                                     append({ thumbnail_file: null })
                                 )
                             )
