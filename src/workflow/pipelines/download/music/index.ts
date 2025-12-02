@@ -72,6 +72,12 @@ const musicPipeline: Pipeline = (options) => (source) =>
     pipe(Promise.resolve(source))
         .pipeAsync(validateSource())
         .pipeAsync(
+            $doAsync(async () => {
+                if (options.thumbnailsDir)
+                    await exec("mkdir -p", options.thumbnailsDir);
+            })
+        )
+        .pipeAsync(
             enpipeIf(
                 !options.noThumbnail,
                 fetchThumbnail(options.thumbnailsDir),
