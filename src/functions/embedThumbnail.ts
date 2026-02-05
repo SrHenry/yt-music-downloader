@@ -21,9 +21,9 @@ export async function embedThumbnail(
         // "-loglevel",
         // "error",
         "-i",
-        `"${music_file}"`,
+        music_file, // `"${music_file}"`,
         "-i",
-        `"${thumbnail_file}"`,
+        thumbnail_file, // `"${thumbnail_file}"`,
         "-map",
         "0:a",
         "-map",
@@ -36,7 +36,7 @@ export async function embedThumbnail(
         'comment="Cover (front)"',
         "-disposition:v",
         "attached_pic",
-        `"${output_path}"`,
+        output_path, // `"${output_path}"`,
     ];
 
     await runFFmpeg(...args).then((output) =>

@@ -1,6 +1,6 @@
 import { object, string } from "@srhenry/type-utils";
 
-import { exec } from "@/shared/functions/exec.ts";
+import { execFile } from "@/shared/functions/execFile.ts";
 
 const hasMessage = object({
     message: string(),
@@ -17,7 +17,7 @@ const hasMessage = object({
  */
 export async function runFFmpeg(...args: string[]): Promise<string> {
     try {
-        return await exec("ffmpeg", ...args);
+        return await execFile("ffmpeg", ...args);
     } catch (err) {
         if (hasMessage(err)) return err.message;
 
