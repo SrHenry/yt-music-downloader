@@ -10,7 +10,7 @@ import type { YouTubePlaylistMetadata } from "../../../types/YouTubePlaylistMeta
 
 import { getMetadata } from "@/functions/getMetadata.ts";
 import { error } from "@/log/index.ts";
-import { YouTubePlaylistMetadataSchema } from "../../../schemas/YouTubePlaylistMetadataSchema.ts";
+import { YouTubePlaylistMetadataSchema } from "@/workflow/pipelines/download/music/schemas/YouTubePlaylistMetadataSchema.ts";
 
 type MetadataValidationError = Experimental.validators.ValidationError<
     unknown,
@@ -18,7 +18,7 @@ type MetadataValidationError = Experimental.validators.ValidationError<
 >;
 
 const validateMetadata = (
-    metadata: unknown
+    metadata: unknown,
 ): Result<
     YouTubePlaylistMetadata,
     Experimental.validators.ValidationErrors<MetadataValidationError[]>
@@ -26,7 +26,7 @@ const validateMetadata = (
     const result = Experimental.validate(
         metadata,
         YouTubePlaylistMetadataSchema(),
-        false
+        false,
     );
 
     return result instanceof Experimental.validators.ValidationErrors
@@ -42,30 +42,26 @@ const validateMetadata = (
 export const fetchPlaylistContentList: StepFactory<
     [Input, Output],
     Initializer
-> =
-    () =>
-    async ({ yt_src }) => {
-        console.log("Fetching playlist content...");
+> = () => async (yt_src) => {
+    console.log("Fetching playlist content...");
 
-        const metadata = await getMetadata(yt_src);
+    const metadata = await getMetadata(yt_src);
 
-        const [err, validatedMetadata] = validateMetadata(metadata);
+    const [err, validatedMetadata] = validateMetadata(metadata);
 
-        if (err) {
-            error(
-                "YouTube source's metadata is not compliant with defined schema!\n %s",
-                err.toString()
-            );
-
-            throw err;
-        }
-
-        console.log();
-        console.log(`Title: ${validatedMetadata.title ?? "<empty>"}`);
-        console.log();
-        console.log(
-            `Description: ${validatedMetadata.description ?? "<empty>"}`
+    if (err) {
+        error(
+            "YouTube source's metadata is not compliant with defined schema!\n %s",
+            err.toString(),
         );
 
-        return { yt_src, metadata: validatedMetadata };
-    };
+        throw err;
+    }
+
+    console.log();
+    console.log(`Title: ${validatedMetadata.title ?? "<empty>"}`);
+    console.log();
+    console.log(`Description: ${validatedMetadata.description ?? "<empty>"}`);
+
+    return { yt_src, metadata: validatedMetadata };
+};
