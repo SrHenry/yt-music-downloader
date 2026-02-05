@@ -32,6 +32,7 @@ export async function fetchThumbnail(yt_src: string): Promise<string>;
  *
  * @param yt_src Music source
  * @param albumName Album name to name the Cover Art (thumbnail)
+ * @param thumbnailDir Path to where to download the thumbnail
  *
  * @returns A promise with a string path to the thumbnail file.
  */
@@ -41,10 +42,28 @@ export async function fetchThumbnail(
     thumbnailDir: string | null
 ): Promise<string>;
 
+/**
+ * Fetch the thumbnail from a music YouTube Source
+ *
+ * @param yt_src Music source
+ * @param albumName Album name to name the Cover Art (thumbnail)
+ * @param thumbnailDir Path to where to download the thumbnail
+ * @param thumbnailMetadata Thumbnail metadata if already fetched
+ *
+ * @returns A promise with a string path to the thumbnail file.
+ */
+export async function fetchThumbnail(
+    yt_src: string,
+    albumName: string | null,
+    thumbnailDir: string | null,
+    thumbnailMetadata: Thumbnail[] | null
+): Promise<string>;
+
 export async function fetchThumbnail(
     yt_src: string,
     albumName: string | null = null,
-    thumbnailDir: string | null = null
+    thumbnailDir: string | null = null,
+    thumbnailMetadata: Thumbnail[] | null = null
 ): Promise<string> {
     if (albumName === null) {
         albumName = await getAlbumName(yt_src);
@@ -52,10 +71,13 @@ export async function fetchThumbnail(
         console.log("Album Name:", albumName);
     }
 
-    console.log("Fetching thumbnails...");
-    const j = await getThumbnails(yt_src);
+    if (!thumbnailMetadata) {
+        console.log("Fetching thumbnails...");
 
-    const squareThumbnails = j.filter(
+        thumbnailMetadata = await getThumbnails(yt_src);
+    }
+
+    const squareThumbnails = thumbnailMetadata.filter(
         (thumbnail) =>
             "width" in thumbnail && thumbnail.width === thumbnail.height
     );

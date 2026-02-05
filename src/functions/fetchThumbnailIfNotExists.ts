@@ -4,6 +4,7 @@ import { fetchThumbnail } from "@/functions/fetchThumbnail.ts";
 import { getAlbumName } from "@/functions/getAlbumName.ts";
 import { THUMBNAILS_PATH } from "@/shared/constants.ts";
 import { fileExists } from "@/shared/functions/fileExists.ts";
+import type { YouTubeMusicMetadata } from "@/workflow/pipelines/download/music/types/YouTubeMusicMetadata.ts";
 
 /**
  * Fetches the thumbnail of a YT Source and returns its path
@@ -29,14 +30,34 @@ export async function fetchThumbnailIfNotExists(
     thumbnailDir: string | null
 ): Promise<string>;
 
+/**
+ * Fetches the thumbnail of a YT Source and returns its path
+ *
+ * @param yt_src Music source
+ * @param thumbnailDir Directory to save the thumbnail
+ * @param musicMetadata music metadata if already fetched
+ *
+ * @returns A promise with the string path to the thumbnail file.
+ */
 export async function fetchThumbnailIfNotExists(
     yt_src: string,
-    thumbnailDir: string | null = null
-): Promise<string> {
-    console.log("Fetching album name...");
-    const albumName = await getAlbumName(yt_src);
+    thumbnailDir: string | null,
+    musicMetadata: YouTubeMusicMetadata | null
+): Promise<string>;
 
-    console.log("Album Name:", albumName);
+export async function fetchThumbnailIfNotExists(
+    yt_src: string,
+    thumbnailDir: string | null = null,
+    musicMetadata: YouTubeMusicMetadata | null = null
+): Promise<string> {
+    let albumName: string;
+
+    if (!musicMetadata) {
+        console.log("Fetching album name...");
+        albumName = await getAlbumName(yt_src);
+
+        console.log("Album Name:", albumName);
+    } else albumName = musicMetadata.album;
 
     const path = resolve(thumbnailDir ?? THUMBNAILS_PATH, `${albumName}.jpg`);
 
@@ -47,5 +68,10 @@ export async function fetchThumbnailIfNotExists(
         return path;
     }
 
-    return fetchThumbnail(yt_src, albumName, thumbnailDir);
+    return fetchThumbnail(
+        yt_src,
+        albumName,
+        thumbnailDir,
+        musicMetadata?.thumbnails ?? null
+    );
 }
