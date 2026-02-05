@@ -1,10 +1,4 @@
-import {
-    boolean,
-    Experimental,
-    object,
-    string,
-    type Infer,
-} from "@srhenry/type-utils";
+import { boolean, object, string, type Infer } from "@srhenry/type-utils";
 
 export type OptionsSchema = Infer<typeof OptionsSchema>;
 
@@ -16,17 +10,5 @@ const OptionsSchema = object({
     outputDir: string().optional(),
     thumbnailsDir: string().optional(),
 });
-
-Experimental.Validator.setValidatorMessage(
-    {
-        playlist: "incorrect option value",
-        thumbnail: "incorrect option value",
-        processing: "incorrect option value",
-        defaultArgs: "incorrect option value",
-        outputDir: "incorrect option value",
-        thumbnailsDir: "incorrect option value",
-    },
-    OptionsSchema
-);
 
 export const Options = () => OptionsSchema;
