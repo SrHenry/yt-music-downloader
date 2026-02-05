@@ -7,7 +7,7 @@ declare interface Thumbnail {
     url: string;
 
     /** Thumbnail preference to order the thumbnail collection */
-    preference: number;
+    preference?: number;
 
     /** Thumbnail width */
     width?: number;
@@ -47,26 +47,41 @@ type __Requirefy_StripNullables<
 
 declare type Requirefy<
     T extends {},
-    TOptions extends __Requirefy_options<T> = {
+    TOptions extends keyof T | __Requirefy_options<T> = {
         stripNullables: false;
         recursive: false;
         properties: keyof T;
     }
-> = Prettify<
-    TOptions["properties"] extends keyof T
-        ? Omit<T, TOptions["properties"]> & {
-              [K in TOptions["properties"]]-?: __Requirefy_Recursive<
-                  TOptions["recursive"],
-                  __Requirefy_StripNullables<TOptions["stripNullables"], T[K]>
-              >;
+> = TOptions extends keyof T
+    ? Requirefy<
+          T,
+          {
+              stripNullables: false;
+              recursive: false;
+              properties: TOptions;
           }
-        : {
-              [K in keyof T]-?: __Requirefy_Recursive<
-                  TOptions["recursive"],
-                  __Requirefy_StripNullables<TOptions["stripNullables"], T[K]>
-              >;
-          }
->;
+      >
+    : Prettify<
+          TOptions["properties"] extends keyof T
+              ? Omit<T, TOptions["properties"]> & {
+                    [K in TOptions["properties"]]-?: __Requirefy_Recursive<
+                        TOptions["recursive"],
+                        __Requirefy_StripNullables<
+                            TOptions["stripNullables"],
+                            T[K]
+                        >
+                    >;
+                }
+              : {
+                    [K in keyof T]-?: __Requirefy_Recursive<
+                        TOptions["recursive"],
+                        __Requirefy_StripNullables<
+                            TOptions["stripNullables"],
+                            T[K]
+                        >
+                    >;
+                }
+      >;
 
 declare type TypeOfTag =
     | "undefined"
