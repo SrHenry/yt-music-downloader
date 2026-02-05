@@ -110,7 +110,7 @@ const playlistPipeline: Pipeline = (options) => (source) =>
                 (ctx) => ctx.metadata.entries,
                 ({ id: yt_src }, _, i, total) =>
                     printProcessingEntry(i + 1, total, () =>
-                        pipe(Promise.resolve({ yt_src }))
+                        pipe(Promise.resolve({ yt_src, metadata: null }))
                             .pipeAsync(
                                 enpipeIf(
                                     !options.noThumbnail,

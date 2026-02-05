@@ -10,7 +10,7 @@ import { info } from "@/log/index.ts";
 
 export const fetchThumbnail: StepFactory<[Input, Output], Initializer> =
     (thumbnailDir = null) =>
-    async ({ yt_src }) => {
+    async ({ yt_src, metadata }) => {
         info(
             "[progress] [fn:%s] Fetching thumbnail...",
             fetchThumbnailIfNotExists.name
@@ -18,8 +18,9 @@ export const fetchThumbnail: StepFactory<[Input, Output], Initializer> =
 
         const thumbnail_file = await fetchThumbnailIfNotExists(
             yt_src,
-            thumbnailDir
+            thumbnailDir,
+            metadata
         );
 
-        return { yt_src, thumbnail_file };
+        return { yt_src, metadata, thumbnail_file };
     };
