@@ -1,56 +1,47 @@
-import type { Fn, Fn1, TupleTools, TypeGuard } from "@srhenry/type-utils";
+import type { Fn, Fn1 } from "@srhenry/type-utils";
 
-import { asTypeGuard, Experimental, helpers, tuple } from "@srhenry/type-utils";
+import { func } from "@/shared/schemas/func.ts";
+import { LengthAwareIterable } from "@/shared/schemas/LengthAwareIterable.ts";
+import { helpers, match, tuple } from "@srhenry/type-utils";
 
-const isUnaryFunction = asTypeGuard<Fn1<any, any>>(
-    (value) => helpers.isFunction(value) && value.length === 1
+const is_fn = tuple(func<[item: unknown], unknown>(1));
+const is_selector_fn = tuple(
+    func<[from: unknown], MaybeLengthAwareIterable<unknown>>(1),
+    func<[item: unknown, from: unknown, index: number, total: number | null]>(
+        1,
+        2,
+        3,
+        4,
+    ),
 );
 
-const unaryFn = () => isUnaryFunction;
-
-type MapFuncGuards<TParams extends [...number[]]> = TParams extends [
-    infer T extends number,
-    ...infer Rest extends number[]
-]
-    ? TypeGuard<Fn<TupleTools.CreateTuple<T>, any>> | MapFuncGuards<Rest>
-    : never;
-
-function func<T extends number>(
-    params: T
-): TypeGuard<Fn<TupleTools.CreateTuple<T>, any>>;
-function func<T extends [...number[]]>(...params: T): MapFuncGuards<T>;
-
-function func(...params: number[]) {
-    return asTypeGuard<Fn<any[], any>>(
-        (value) =>
-            helpers.isFunction(value) && params.some((p) => p === value.length)
-    );
-}
-
-const is_fn = tuple(unaryFn());
-const is_selector_fn = tuple(unaryFn(), func(1, 2, 3, 4));
-
-const { $switch } = Experimental;
+const getParamsResolver = match()
+    .with(is_fn, ([fn]) => (list: Iterable<unknown>) => {
+        for (const e of list) fn(e);
+    })
+    .with(is_selector_fn, ([selector, fn]) => (value: unknown) => {
+        const list = selector(value);
+        let i = 0;
+        for (const e of list)
+            fn(
+                e,
+                value,
+                i++,
+                match(list)
+                    .with(LengthAwareIterable(), (l) => l.length)
+                    .default(null)
+                    .exec(),
+            );
+    });
 
 export function forEach<T>(fn: Fn<[item: T], unknown>): Fn1<Iterable<T>, void>;
 export function forEach<T, U>(
     selector: Fn<[from: T], Iterable<U>>,
-    fn: Fn<[item: U, from: T, index: number, total: number | null], unknown>
+    fn: Fn<[item: U, from: T, index: number, total: number | null], unknown>,
 ): Fn1<T, void>;
 
 export function forEach(...args: unknown[]) {
-    return $switch()
-        .case(is_fn, ([fn]) => (list: Iterable<unknown>) => {
-            for (const e of list) fn(e);
-        })
-
-        .case(is_selector_fn, ([selector, fn]) => (value: unknown) => {
-            let i = 0;
-            for (const e of selector(value))
-                fn(e, value, i++, selector(value)?.length ?? null);
-        })
-        .default(() => {
-            throw new Error("Invalid arguments!");
-        })
-        .invoke(args);
+    return getParamsResolver
+        .default(() => helpers.$throw(new Error("Invalid arguments!")))
+        .exec(args)!;
 }

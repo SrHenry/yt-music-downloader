@@ -34,11 +34,11 @@ type __Requirefy_options<T extends {} = { [x: string]: any }> = {
 
 type __Requirefy_Recursive<
     recursive extends boolean,
-    T extends {}
+    T extends {},
 > = recursive extends true ? Requirefy<T> : T;
 type __Requirefy_StripNullables<
     stripNullables extends boolean,
-    T extends {}
+    T extends {},
 > = stripNullables extends true
     ? T extends null | infer U
         ? NonNullable<U>
@@ -51,7 +51,7 @@ declare type Requirefy<
         stripNullables: false;
         recursive: false;
         properties: keyof T;
-    }
+    },
 > = Prettify<
     TOptions["properties"] extends keyof T
         ? Omit<T, TOptions["properties"]> & {
@@ -81,10 +81,10 @@ declare type TypeOfTag =
 type ObjectKeys<T> = T extends object
     ? (keyof T)[]
     : T extends number
-    ? []
-    : T extends Array<any> | string
-    ? string[]
-    : never;
+      ? []
+      : T extends Array<any> | string
+        ? string[]
+        : never;
 
 type Fallback<T, TO, Includes = never> = T extends never | Includes ? TO : T;
 
@@ -95,21 +95,21 @@ type ObjectEntries<T extends {}> = ObjectEntry<T>[];
 type Entry<T> = T extends any[]
     ? T
     : T extends {}
-    ? ObjectEntry<T>
-    : [string, any];
+      ? ObjectEntry<T>
+      : [string, any];
 type Entries<T> = T extends any[]
     ? T
     : T extends {}
-    ? ObjectEntries<T>
-    : [string, any][];
+      ? ObjectEntries<T>
+      : [string, any][];
 
 type ObjectValue<T> = T extends any[]
     ? T
     : T extends {}
-    ? ObjectEntry<T> extends [any, infer TValue]
-        ? TValue
-        : never
-    : never;
+      ? ObjectEntry<T> extends [any, infer TValue]
+          ? TValue
+          : never
+      : never;
 
 type ObjectValues<T extends {}> = ObjectValue<T>[];
 type Value<T> = T extends any[] ? T : T extends {} ? ObjectValue<T> : any[];
@@ -132,3 +132,15 @@ interface ArrayConstructor {
 }
 
 declare var Array: ArrayConstructor;
+
+/** Iterable object with a `length` property */
+type LengthAwareIterable<T> = Iterable<T> & { length: number };
+/** AsyncIterable object with a `length` property */
+type LengthAwareAsyncIterable<T> = AsyncIterable<T> & { length: number };
+
+/** Iterable object possibly with a `length` property */
+type MaybeLengthAwareIterable<T> = Iterable<T> | LengthAwareIterable<T>;
+/** AsyncIterable object possibly with a `length` property */
+type MaybeLengthAwareAsyncIterable<T> =
+    | AsyncIterable<T>
+    | LengthAwareAsyncIterable<T>;
