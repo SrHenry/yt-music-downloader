@@ -1,5 +1,5 @@
+import type { Output as AltPreviousOutput } from "@/workflow/pipelines/download/music/pipeline/steps/fetchMetadata/types/index.ts";
 import type { Output as PrimaryPreviousOutput } from "@/workflow/pipelines/download/music/pipeline/steps/fetchTumbnail/types/index.ts";
-import type { Output as AltPreviousOutput } from "@/workflow/pipelines/download/music/pipeline/steps/validateSource/types/index.ts";
 
 export type Input = Prettify<
     Omit<PrimaryPreviousOutput | AltPreviousOutput, "thumbnail_file"> & {

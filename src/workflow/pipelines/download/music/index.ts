@@ -13,11 +13,11 @@ import { enpipeIf } from "@/shared/pipelines/enpipeIf.ts";
 import { forEachAsync } from "@/shared/pipelines/forEachAsync.ts";
 import DefaultOptions from "@/workflow/pipelines/download/music/constants/DefaultDownloadOptions.ts";
 import { embedThumbnail } from "@/workflow/pipelines/download/music/pipeline/steps/embedThumbnail/index.ts";
+import { fetchMetadata } from "@/workflow/pipelines/download/music/pipeline/steps/fetchMetadata/index.ts";
 import { fetchMusic } from "@/workflow/pipelines/download/music/pipeline/steps/fetchMusic/index.ts";
 import { fetchPlaylistContentList } from "@/workflow/pipelines/download/music/pipeline/steps/fetchPlaylistContentList/index.ts";
 import { fetchThumbnail } from "@/workflow/pipelines/download/music/pipeline/steps/fetchTumbnail/index.ts";
 import { finish } from "@/workflow/pipelines/download/music/pipeline/steps/finish/index.ts";
-import { validateSource } from "@/workflow/pipelines/download/music/pipeline/steps/validateSource/index.ts";
 
 type RequiredOptions = Requirefy<DownloadOptions>;
 type Pipeline = (options: RequiredOptions) => (source: string) => Promise<void>;
@@ -70,7 +70,7 @@ const parseFetchArgs = (options: RequiredOptions) => ({
 
 const musicPipeline: Pipeline = (options) => (source) =>
     pipe(Promise.resolve(source))
-        .pipeAsync(validateSource())
+        .pipeAsync(fetchMetadata())
         .pipeAsync(
             $doAsync(async () => {
                 if (options.thumbnailsDir)
@@ -97,7 +97,7 @@ const musicPipeline: Pipeline = (options) => (source) =>
 
 const playlistPipeline: Pipeline = (options) => (source) =>
     pipe(Promise.resolve(source))
-        .pipeAsync(validateSource())
+        // .pipeAsync(fetchMetadata())
         .pipeAsync(fetchPlaylistContentList())
         .pipeAsync(
             $doAsync(async ({ metadata: { entries } }) => {
