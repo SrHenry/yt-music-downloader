@@ -258,10 +258,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@srhenry/type-utils@^0.6.4":
-  version "0.6.4"
-  resolved "https://registry.yarnpkg.com/@srhenry/type-utils/-/type-utils-0.6.4.tgz#ec9e95181af2bea67232f096243efc0637167d33"
-  integrity sha512-oQCYg5qayVlETbqD1UcvZKWp1egFx6k6DeUsGP22v1Inf9LVeJ0SPxjZGSfApG1amTNHryA7L2GkqEULXd+IzA==
+"@srhenry/type-utils@^0.6.5":
+  version "0.6.5"
+  resolved "https://registry.yarnpkg.com/@srhenry/type-utils/-/type-utils-0.6.5.tgz#9736af1fd5386f34183fab9b417283b262f091e1"
+  integrity sha512-I12poAqs7NJPTRK86Knnc20a15Fyl5Nwz2ZwSp3lHdyyOsCTPo8LwepdkCtkyKfirpRRtsnnDvfORv7JtRRpzA==
   dependencies:
     "@types/node" "^25.1.0"
     reflect-metadata "^0.2.2"
