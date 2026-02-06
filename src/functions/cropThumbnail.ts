@@ -1,7 +1,7 @@
 import { copyFile, rm } from "node:fs/promises";
 import { basename, resolve } from "node:path";
 
-import { DEFAULT_CROP_OPTIONS, ROOT_PATH } from "@/constants.ts";
+import { DEFAULT_CROP_OPTIONS } from "@/constants.ts";
 import { fileExists } from "@/shared/functions/fileExists.ts";
 import type { CropOptions } from "@/types/crop.ts";
 import { cropToSquare } from "./cropToSquare.ts";
@@ -15,15 +15,17 @@ import { cropToSquare } from "./cropToSquare.ts";
  */
 export async function cropThumbnail(
     inputPath: string,
-    options: CropOptions = DEFAULT_CROP_OPTIONS,
+    {
+        overwrite = DEFAULT_CROP_OPTIONS.overwrite,
+        tempDirectory = DEFAULT_CROP_OPTIONS.tempDirectory,
+    }: CropOptions = {},
 ): Promise<string> {
-    const tempDirectory = resolve(ROOT_PATH, "out/crop");
     const croppedPath = resolve(
         tempDirectory,
         `cropped-${basename(inputPath)}`,
     );
 
-    await cropToSquare(inputPath);
+    await cropToSquare(inputPath, tempDirectory);
 
     if (!(await fileExists(croppedPath))) {
         throw new Error(
@@ -31,7 +33,7 @@ export async function cropThumbnail(
         );
     }
 
-    if (options.overwrite) {
+    if (overwrite) {
         // Use copy + unlink instead of rename to support cross-device operations
         await copyFile(croppedPath, inputPath);
         await rm(croppedPath);

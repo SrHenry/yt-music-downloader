@@ -1,6 +1,6 @@
 import { basename, resolve } from "node:path";
 
-import { ROOT_PATH } from "@/constants.ts";
+import { DEFAULT_CROP_OPTIONS } from "@/constants.ts";
 import { runFFmpeg } from "@/functions/runFFmpeg.ts";
 import { createDirIfNotExists } from "@/shared/functions/createDirIfNotExists.ts";
 
@@ -13,12 +13,13 @@ import { createDirIfNotExists } from "@/shared/functions/createDirIfNotExists.ts
  * @param inputPath Path to the input image file
  * @returns Path to the output (cropped) image file
  */
-export async function cropToSquare(inputPath: string): Promise<string> {
-    const directory = resolve(ROOT_PATH, "out/crop");
-    const outputPath = resolve(directory, `cropped-${basename(inputPath)}`);
+export async function cropToSquare(
+    inputPath: string,
+    tempDirectory = DEFAULT_CROP_OPTIONS.tempDirectory,
+): Promise<string> {
+    const outputPath = resolve(tempDirectory, `cropped-${basename(inputPath)}`);
 
-    await createDirIfNotExists(directory);
-
+    await createDirIfNotExists(tempDirectory);
     await runFFmpeg(
         "-hide_banner",
         "-i",
