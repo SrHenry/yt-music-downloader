@@ -23,22 +23,18 @@ export async function cropThumbnail(
         `cropped-${basename(inputPath)}`,
     );
 
-    // Crop the image to square
     await cropToSquare(inputPath);
 
-    // Check if the cropped file was created
     if (!(await fileExists(croppedPath))) {
         throw new Error(
             `Failed to crop thumbnail! Cropped file was not created.`,
         );
     }
 
-    // If overwrite is true, replace the original file with the cropped version
     if (options.overwrite) {
-        // Remove original file
         await rm(inputPath);
-        // Move cropped file to original location
         await move(croppedPath, inputPath);
+
         return inputPath;
     }
 
