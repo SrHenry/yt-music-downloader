@@ -1,8 +1,8 @@
 import { resolve } from "node:path";
 
+import { THUMBNAILS_PATH } from "@/constants.ts";
 import { fetchThumbnail } from "@/functions/fetchThumbnail.ts";
 import { getAlbumName } from "@/functions/getAlbumName.ts";
-import { THUMBNAILS_PATH } from "@/shared/constants.ts";
 import { fileExists } from "@/shared/functions/fileExists.ts";
 
 /**
@@ -13,7 +13,7 @@ import { fileExists } from "@/shared/functions/fileExists.ts";
  * @returns A promise with the string path to the thumbnail file.
  */
 export async function fetchThumbnailIfNotExists(
-    yt_src: string
+    yt_src: string,
 ): Promise<string> {
     console.log("Fetching album name...");
     const albumName = await getAlbumName(yt_src);

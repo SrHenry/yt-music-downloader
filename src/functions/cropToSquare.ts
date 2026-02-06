@@ -1,7 +1,7 @@
 import { resolve } from "node:path";
 
-import { runFFmpeg } from "@/functions/runFFmpeg.ts";
 import { ROOT_PATH } from "@/constants.ts";
+import { runFFmpeg } from "@/functions/runFFmpeg.ts";
 
 /**
  * Crops an image to a 1:1 (square) aspect ratio using FFmpeg.
@@ -24,7 +24,7 @@ export async function cropToSquare(inputPath: string): Promise<string> {
         "-vf",
         '"crop=min(iw\\,ih):min(iw\\,ih):(iw-min(iw\\,ih))/2:(ih-min(iw\\,ih))/2"',
         "-y",
-        `"${outputPath}"`
+        `"${outputPath}"`,
     );
 
     return outputPath;

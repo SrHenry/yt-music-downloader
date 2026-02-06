@@ -1,11 +1,10 @@
 import { rename as move, rm } from "node:fs/promises";
 import { basename, resolve } from "node:path";
 
-import { cropToSquare } from "./cropToSquare.ts";
-import { DEFAULT_CROP_OPTIONS } from "@/constants.ts";
-import type { CropOptions } from "@/types/crop.ts";
-import { ROOT_PATH } from "@/constants.ts";
+import { DEFAULT_CROP_OPTIONS, ROOT_PATH } from "@/constants.ts";
 import { fileExists } from "@/shared/functions/fileExists.ts";
+import type { CropOptions } from "@/types/crop.ts";
+import { cropToSquare } from "./cropToSquare.ts";
 
 /**
  * Crops an image to a 1:1 (square) aspect ratio and optionally overwrites the original file.
@@ -16,17 +15,22 @@ import { fileExists } from "@/shared/functions/fileExists.ts";
  */
 export async function cropThumbnail(
     inputPath: string,
-    options: CropOptions = DEFAULT_CROP_OPTIONS
+    options: CropOptions = DEFAULT_CROP_OPTIONS,
 ): Promise<string> {
     const tempDirectory = resolve(ROOT_PATH, "out/crop");
-    const croppedPath = resolve(tempDirectory, `cropped-${basename(inputPath)}`);
+    const croppedPath = resolve(
+        tempDirectory,
+        `cropped-${basename(inputPath)}`,
+    );
 
     // Crop the image to square
     await cropToSquare(inputPath);
 
     // Check if the cropped file was created
     if (!(await fileExists(croppedPath))) {
-        throw new Error(`Failed to crop thumbnail! Cropped file was not created.`);
+        throw new Error(
+            `Failed to crop thumbnail! Cropped file was not created.`,
+        );
     }
 
     // If overwrite is true, replace the original file with the cropped version
