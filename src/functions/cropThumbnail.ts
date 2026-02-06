@@ -1,4 +1,4 @@
-import { rename as move, rm } from "node:fs/promises";
+import { copyFile, rm } from "node:fs/promises";
 import { basename, resolve } from "node:path";
 
 import { DEFAULT_CROP_OPTIONS, ROOT_PATH } from "@/constants.ts";
@@ -32,8 +32,9 @@ export async function cropThumbnail(
     }
 
     if (options.overwrite) {
-        await rm(inputPath);
-        await move(croppedPath, inputPath);
+        // Use copy + unlink instead of rename to support cross-device operations
+        await copyFile(croppedPath, inputPath);
+        await rm(croppedPath);
 
         return inputPath;
     }
