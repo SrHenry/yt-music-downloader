@@ -1,7 +1,8 @@
-import { resolve } from "node:path";
+import { basename, resolve } from "node:path";
 
 import { ROOT_PATH } from "@/constants.ts";
 import { runFFmpeg } from "@/functions/runFFmpeg.ts";
+import { createDirIfNotExists } from "@/shared/functions/createDirIfNotExists.ts";
 
 /**
  * Crops an image to a 1:1 (square) aspect ratio using FFmpeg.
@@ -14,8 +15,9 @@ import { runFFmpeg } from "@/functions/runFFmpeg.ts";
  */
 export async function cropToSquare(inputPath: string): Promise<string> {
     const directory = resolve(ROOT_PATH, "out/crop");
-    const basename = require("node:path").basename(inputPath);
-    const outputPath = resolve(directory, `cropped-${basename}`);
+    const outputPath = resolve(directory, `cropped-${basename(inputPath)}`);
+
+    await createDirIfNotExists(directory);
 
     await runFFmpeg(
         "-hide_banner",
