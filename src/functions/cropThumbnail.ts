@@ -1,10 +1,11 @@
+import type { CropOptions } from "@/types/crop.ts";
+
 import { copyFile, rm } from "node:fs/promises";
 import { basename, resolve } from "node:path";
 
 import { DEFAULT_CROP_OPTIONS } from "@/constants.ts";
+import { cropToSquare } from "@/functions/cropToSquare.ts";
 import { fileExists } from "@/shared/functions/fileExists.ts";
-import type { CropOptions } from "@/types/crop.ts";
-import { cropToSquare } from "./cropToSquare.ts";
 
 /**
  * Crops an image to a 1:1 (square) aspect ratio and optionally overwrites the original file.

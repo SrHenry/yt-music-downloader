@@ -3,7 +3,7 @@ import { downloadThumbnail } from "@/functions/downloadThumbnail.ts";
 import { getAlbumName } from "@/functions/getAlbumName.ts";
 import { getResolution } from "@/functions/getResolution.ts";
 import { getThumbnails } from "@/functions/getThumbnails.ts";
-import { selectThumbnail } from "./selectThumbnail.ts";
+import { selectThumbnail } from "@/functions/selectThumbnail.ts";
 
 /**
  * Fetch the thumbnail from a music YouTube Source

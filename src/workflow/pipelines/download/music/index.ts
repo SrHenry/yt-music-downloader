@@ -14,10 +14,10 @@ import { forEachAsync } from "@/shared/pipelines/forEachAsync.ts";
 import DefaultOptions from "@/workflow/pipelines/download/music/constants/DefaultDownloadOptions.ts";
 import { embedThumbnail } from "@/workflow/pipelines/download/music/pipeline/steps/embedThumbnail/index.ts";
 import { fetchMusic } from "@/workflow/pipelines/download/music/pipeline/steps/fetchMusic/index.ts";
+import { fetchPlaylistContentList } from "@/workflow/pipelines/download/music/pipeline/steps/fetchPlaylistContentList/index.ts";
 import { fetchThumbnail } from "@/workflow/pipelines/download/music/pipeline/steps/fetchTumbnail/index.ts";
 import { finish } from "@/workflow/pipelines/download/music/pipeline/steps/finish/index.ts";
 import { validateSource } from "@/workflow/pipelines/download/music/pipeline/steps/validateSource/index.ts";
-import { fetchPlaylistContentList } from "./pipeline/steps/fetchPlaylistContentList/index.ts";
 
 type RequiredOptions = Requirefy<DownloadOptions>;
 type Pipeline = (options: RequiredOptions) => (source: string) => Promise<void>;
@@ -75,14 +75,14 @@ const musicPipeline: Pipeline = (options) => (source) =>
             enpipeIf(
                 !options.noThumbnail,
                 fetchThumbnail(),
-                append({ thumbnail_file: null })
-            )
+                append({ thumbnail_file: null }),
+            ),
         )
         .pipeAsync(
             $doAsync(async () => {
                 if (options.outputDir)
                     await exec("mkdir -p", options.outputDir);
-            })
+            }),
         )
         .pipeAsync(fetchMusic(parseFetchArgs(options)))
         .pipeAsync(enpipeIf(!options.noThumbnail, embedThumbnail()))
@@ -97,7 +97,7 @@ const playlistPipeline: Pipeline = (options) => (source) =>
             $doAsync(async ({ metadata: { entries } }) => {
                 if (entries.length > 0 && options.outputDir)
                     await exec("mkdir -p", options.outputDir);
-            })
+            }),
         )
         .pipeAsync(
             forEachAsync(
@@ -109,15 +109,18 @@ const playlistPipeline: Pipeline = (options) => (source) =>
                                 enpipeIf(
                                     !options.noThumbnail,
                                     fetchThumbnail(),
-                                    append({ thumbnail_file: null })
-                                )
+                                    append({ thumbnail_file: null }),
+                                ),
                             )
                             .pipeAsync(fetchMusic(parseFetchArgs(options)))
                             .pipeAsync(
-                                enpipeIf(!options.noThumbnail, embedThumbnail())
-                            )
-                    )
-            )
+                                enpipeIf(
+                                    !options.noThumbnail,
+                                    embedThumbnail(),
+                                ),
+                            ),
+                    ),
+            ),
         )
         .pipeAsync(finish())
         .depipe();
@@ -130,12 +133,12 @@ const printError = (error: unknown) => console.error(chalk.redBright(error));
 export async function downloadMusicPipeline(source: string): Promise<void>;
 export async function downloadMusicPipeline(
     source: string,
-    options: DownloadOptions
+    options: DownloadOptions,
 ): Promise<void>;
 
 export async function downloadMusicPipeline(
     source: string,
-    options: DownloadOptions = DefaultOptions
+    options: DownloadOptions = DefaultOptions,
 ): Promise<void> {
     return await pipeline(parseOptions)
         .pipe(enpipe(options))
@@ -143,8 +146,8 @@ export async function downloadMusicPipeline(
             enpipeIf(
                 ({ playlist }) => playlist,
                 playlistPipeline,
-                musicPipeline
-            )
+                musicPipeline,
+            ),
         )
         .pipe(enpipe(source))
         .catch(printError);
