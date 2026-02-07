@@ -12,30 +12,26 @@ import { validateMetadata } from "@/workflow/pipelines/download/music/pipeline/s
 export const fetchPlaylistContentList: StepFactory<
     [Input, Output],
     Initializer
-> =
-    () =>
-    async ({ yt_src }) => {
-        console.log("Fetching playlist content...");
+> = () => async (yt_src) => {
+    console.log("Fetching playlist content...");
 
-        const metadata = await getMetadata(yt_src);
+    const metadata = await getMetadata(yt_src);
 
-        const [err, validatedMetadata] = validateMetadata(metadata);
+    const [err, validatedMetadata] = validateMetadata(metadata);
 
-        if (err) {
-            error(
-                "YouTube source's metadata is not compliant with defined schema!\n %s",
-                err.toString(),
-            );
-
-            throw err;
-        }
-
-        console.log();
-        console.log(`Title: ${validatedMetadata.title ?? "<empty>"}`);
-        console.log();
-        console.log(
-            `Description: ${validatedMetadata.description ?? "<empty>"}`,
+    if (err) {
+        error(
+            "YouTube source's metadata is not compliant with defined schema!\n %s",
+            err.toString(),
         );
 
-        return { yt_src, metadata: validatedMetadata };
-    };
+        throw err;
+    }
+
+    console.log();
+    console.log(`Title: ${validatedMetadata.title ?? "<empty>"}`);
+    console.log();
+    console.log(`Description: ${validatedMetadata.description ?? "<empty>"}`);
+
+    return { yt_src, metadata: validatedMetadata };
+};

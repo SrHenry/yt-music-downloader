@@ -8,6 +8,7 @@ const OptionsSchema = object({
     processing: boolean(),
     defaultArgs: boolean(),
     outputDir: string().optional(),
+    thumbnailsDir: string().optional(),
 });
 
 export const Options = () => OptionsSchema;

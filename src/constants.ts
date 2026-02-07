@@ -10,6 +10,12 @@ export const DEFAULT_CROP_OPTIONS = {
     tempDirectory: resolve(ROOT_PATH, "out/crop"),
 } as const satisfies CropOptions;
 
+export const BASE_LOG_PATHS = {
+    ytDlp: resolve(ROOT_PATH, "logs/yt-dlp"),
+    ffmpeg: resolve(ROOT_PATH, "logs/ffmpeg"),
+    workflow: resolve(ROOT_PATH, "logs/workflow"),
+};
+
 export default {
     ROOT_PATH,
     THUMBNAILS_PATH,

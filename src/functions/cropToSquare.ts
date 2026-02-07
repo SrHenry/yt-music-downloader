@@ -3,6 +3,7 @@ import { basename, resolve } from "node:path";
 import { DEFAULT_CROP_OPTIONS } from "@/constants.ts";
 import { runFFmpeg } from "@/functions/runFFmpeg.ts";
 import { createDirIfNotExists } from "@/shared/functions/createDirIfNotExists.ts";
+import { logProcess } from "@/shared/pipelines/logProcess.ts";
 
 /**
  * Crops an image to a 1:1 (square) aspect ratio using FFmpeg.
@@ -23,12 +24,13 @@ export async function cropToSquare(
     await runFFmpeg(
         "-hide_banner",
         "-i",
-        `"${inputPath}"`,
+        inputPath,
         "-vf",
-        '"crop=min(iw\\,ih):min(iw\\,ih):(iw-min(iw\\,ih))/2:(ih-min(iw\\,ih))/2"',
+        // Escape commas with backslashes to prevent ffmpeg from interpreting them as filter separators
+        "crop=min(iw\\,ih):min(iw\\,ih):(iw-min(iw\\,ih))/2:(ih-min(iw\\,ih))/2",
         "-y",
-        `"${outputPath}"`,
-    );
+        outputPath,
+    ).then(logProcess("ffmpeg"));
 
     return outputPath;
 }
