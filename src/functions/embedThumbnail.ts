@@ -1,8 +1,8 @@
 import { rename as move, writeFile } from "node:fs/promises";
 import { basename, resolve } from "node:path";
 
+import { ROOT_PATH } from "@/constants.ts";
 import { runFFmpeg } from "@/functions/runFFmpeg.ts";
-import { ROOT_PATH } from "@/shared/constants.ts";
 import { fileExists } from "@/shared/functions/fileExists.ts";
 
 /**
@@ -13,7 +13,7 @@ import { fileExists } from "@/shared/functions/fileExists.ts";
  */
 export async function embedThumbnail(
     music_file: string,
-    thumbnail_file: string
+    thumbnail_file: string,
 ): Promise<void> {
     const output_path = resolve(ROOT_PATH, "out", basename(music_file));
     const args = [
@@ -48,15 +48,15 @@ export async function embedThumbnail(
                     .toISOString()
                     .replace("T", "_")
                     .replace(/:/g, "-")
-                    .concat(".log")
+                    .concat(".log"),
             ),
-            output
-        )
+            output,
+        ),
     );
 
     if (!(await fileExists(output_path)))
         throw new Error(
-            "Failed to embed thumbnail! check FFmpeg logs for more info."
+            "Failed to embed thumbnail! check FFmpeg logs for more info.",
         );
 
     await move(output_path, music_file);
