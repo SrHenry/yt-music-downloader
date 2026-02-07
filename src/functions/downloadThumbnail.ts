@@ -1,7 +1,7 @@
 import { join } from "node:path";
 
+import { THUMBNAILS_PATH } from "@/constants.ts";
 import { getAlbumName } from "@/functions/getAlbumName.ts";
-import { THUMBNAILS_PATH } from "@/shared/constants.ts";
 import { downloadAsFile } from "@/shared/functions/download.ts";
 
 /**
@@ -14,7 +14,7 @@ import { downloadAsFile } from "@/shared/functions/download.ts";
  */
 export async function downloadThumbnail(
     yt_src: string,
-    thumbnail: Thumbnail
+    thumbnail: Thumbnail,
 ): Promise<string>;
 
 /**
@@ -29,7 +29,7 @@ export async function downloadThumbnail(
 export async function downloadThumbnail(
     yt_src: string,
     thumbnail: Thumbnail,
-    albumName: string
+    albumName: string,
 ): Promise<string>;
 
 /**
@@ -46,14 +46,14 @@ export async function downloadThumbnail(
     yt_src: string,
     thumbnail: Thumbnail,
     albumName: string | null,
-    thumbnailDir: string | null
+    thumbnailDir: string | null,
 ): Promise<string>;
 
 export async function downloadThumbnail(
     yt_src: string,
     thumbnail: Thumbnail,
     albumName: string | null = null,
-    thumbnailDir: string | null = null
+    thumbnailDir: string | null = null,
 ): Promise<string> {
     const { url } = thumbnail;
 

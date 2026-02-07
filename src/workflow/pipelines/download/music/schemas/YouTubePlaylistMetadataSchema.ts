@@ -17,7 +17,7 @@ const YouTubePlaylistEntryMetadataSchema = () =>
                     .regex(/^\d+x\d+$/i)
                     .optional(),
             }),
-        })
+        }),
     );
 
 export const YouTubePlaylistMetadataSchema = () =>
@@ -26,5 +26,5 @@ export const YouTubePlaylistMetadataSchema = () =>
         object({
             thumbnails: array(YouTubeThumbnailMetadataSchema()),
             entries: array(YouTubePlaylistEntryMetadataSchema()),
-        })
+        }),
     );

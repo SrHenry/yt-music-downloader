@@ -1,8 +1,8 @@
 import { resolve } from "node:path";
 
+import { THUMBNAILS_PATH } from "@/constants.ts";
 import { fetchThumbnail } from "@/functions/fetchThumbnail.ts";
 import { getAlbumName } from "@/functions/getAlbumName.ts";
-import { THUMBNAILS_PATH } from "@/shared/constants.ts";
 import { fileExists } from "@/shared/functions/fileExists.ts";
 import type { YouTubeMusicMetadata } from "@/workflow/pipelines/download/music/types/YouTubeMusicMetadata.ts";
 
@@ -14,7 +14,7 @@ import type { YouTubeMusicMetadata } from "@/workflow/pipelines/download/music/t
  * @returns A promise with the string path to the thumbnail file.
  */
 export async function fetchThumbnailIfNotExists(
-    yt_src: string
+    yt_src: string,
 ): Promise<string>;
 
 /**
@@ -27,7 +27,7 @@ export async function fetchThumbnailIfNotExists(
  */
 export async function fetchThumbnailIfNotExists(
     yt_src: string,
-    thumbnailDir: string | null
+    thumbnailDir: string | null,
 ): Promise<string>;
 
 /**
@@ -42,13 +42,13 @@ export async function fetchThumbnailIfNotExists(
 export async function fetchThumbnailIfNotExists(
     yt_src: string,
     thumbnailDir: string | null,
-    musicMetadata: YouTubeMusicMetadata | null
+    musicMetadata: YouTubeMusicMetadata | null,
 ): Promise<string>;
 
 export async function fetchThumbnailIfNotExists(
     yt_src: string,
     thumbnailDir: string | null = null,
-    musicMetadata: YouTubeMusicMetadata | null = null
+    musicMetadata: YouTubeMusicMetadata | null = null,
 ): Promise<string> {
     let albumName: string;
 
@@ -72,6 +72,6 @@ export async function fetchThumbnailIfNotExists(
         yt_src,
         albumName,
         thumbnailDir,
-        musicMetadata?.thumbnails ?? null
+        musicMetadata?.thumbnails ?? null,
     );
 }
