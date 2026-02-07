@@ -27,7 +27,8 @@ export async function cropToSquare(
         inputPath,
         "-vf",
         // Escape commas with backslashes to prevent ffmpeg from interpreting them as filter separators
-        "crop=min(iw\\,ih):min(iw\\,ih):(iw-min(iw\\,ih))/2:(ih-min(iw\\,ih))/2",
+        // Need quadruple backslash in TypeScript source to get double backslash at runtime
+        "crop=min(iw\\\\,ih):min(iw\\\\,ih):(iw-min(iw\\\\,ih))/2:(ih-min(iw\\\\,ih))/2",
         "-y",
         outputPath,
     ).then(logProcess("ffmpeg"));
