@@ -98,7 +98,7 @@ export async function fetchThumbnail(
 
     if (needsCropping) {
         console.log("Cropping thumbnail to 1:1 aspect ratio...");
-        await cropThumbnail(path, { overwrite: true });
+        await cropThumbnail(path);
         console.log("Thumbnail cropped!");
     }
 
