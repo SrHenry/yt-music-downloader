@@ -5,9 +5,9 @@ import type {
 } from "@/workflow/pipelines/download/music/pipeline/steps/fetchMetadata/types/index.ts";
 import type { StepFactory } from "@/workflow/pipelines/types/StepFactory.ts";
 
+import { ROOT_PATH } from "@/constants.ts";
 import { getMetadata } from "@/functions/getMetadata.ts";
 import { info } from "@/log/index.ts";
-import { ROOT_PATH } from "@/shared/constants.ts";
 import { ProcessError } from "@/shared/errors/ProcessError.ts";
 import { YouTubeMusicMetadataSchema } from "@/workflow/pipelines/download/music/schemas/YouTubeMusicMetadataSchema.ts";
 import { writeFile } from "node:fs/promises";

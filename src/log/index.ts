@@ -7,3 +7,5 @@ export const info = log.extend("info");
 export const warn = log.extend("warn");
 
 export const error = log.extend("error");
+
+export * as functions from "@/log/functions/index.ts";
