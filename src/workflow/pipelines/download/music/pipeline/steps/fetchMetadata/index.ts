@@ -5,29 +5,17 @@ import type {
 } from "@/workflow/pipelines/download/music/pipeline/steps/fetchMetadata/types/index.ts";
 import type { StepFactory } from "@/workflow/pipelines/types/StepFactory.ts";
 
-import { ROOT_PATH } from "@/constants.ts";
 import { getMetadata } from "@/functions/getMetadata.ts";
 import { info } from "@/log/index.ts";
 import { ProcessError } from "@/shared/errors/ProcessError.ts";
+import { logProcess } from "@/shared/pipelines/logProcess.ts";
+import { logProcessError } from "@/shared/pipelines/logProcessError.ts";
 import { YouTubeMusicMetadataSchema } from "@/workflow/pipelines/download/music/schemas/YouTubeMusicMetadataSchema.ts";
-import { writeFile } from "node:fs/promises";
-import { resolve } from "node:path";
+import { ValidationErrors } from "@srhenry/type-utils";
 
 const { validate: validateMetadata } = YouTubeMusicMetadataSchema().validator();
 
-const handleProcessError = (error: ProcessError) =>
-    writeFile(
-        resolve(
-            ROOT_PATH,
-            "logs/yt-dlp",
-            new Date()
-                .toISOString()
-                .replace("T", "_")
-                .replace(/:/g, "-")
-                .concat(".log"),
-        ),
-        error.stderr ?? "",
-    );
+const handleProcessError = logProcessError("ytDlp");
 
 export const fetchMetadata: StepFactory<[Input, Output], Initializer> =
     () => async (source) => {
@@ -52,6 +40,11 @@ export const fetchMetadata: StepFactory<[Input, Output], Initializer> =
                 metadata,
             };
         } catch (error) {
+            if (error instanceof ValidationErrors) {
+                logProcess("workflow")(error);
+
+                throw new TypeError(error.toString(), { cause: error });
+            }
             if (error instanceof ProcessError) {
                 handleProcessError(error);
 
