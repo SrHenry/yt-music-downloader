@@ -1,7 +1,7 @@
 import { writeFile } from "node:fs/promises";
 import { join } from "node:path";
 
-import { generateRandomString } from "./generateRandomString.ts";
+import { generateRandomString } from "@/shared/functions/generateRandomString.ts";
 
 /**
  * Fetches an URL as a file.
@@ -33,7 +33,7 @@ export async function downloadAsFile(url: string): Promise<Buffer<ArrayBuffer>>;
  */
 export async function downloadAsFile(
     url: string,
-    filename: string
+    filename: string,
 ): Promise<Buffer<ArrayBuffer>>;
 /**
  * Downloads an URL as a file and writes to a given path.
@@ -47,13 +47,13 @@ export async function downloadAsFile(
 export async function downloadAsFile(
     url: string,
     filename: string,
-    path: string
+    path: string,
 ): Promise<void>;
 
 export async function downloadAsFile(
     url: string,
     filename: string | null = null,
-    path: string | null = null
+    path: string | null = null,
 ): Promise<void | Buffer> {
     const buf = await download(url).then((b) => Buffer.from(b));
 

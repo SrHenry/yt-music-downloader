@@ -25,7 +25,7 @@ export const createClearCommand = () => (program: Command) => {
             "-e, --allowed-extensions <extensions>",
             "defines which music extension files are to be deleted from workspace",
 
-            "flac,mp3,m4a,aac,ac3,eac3,ogg,wav,wma"
+            "flac,mp3,m4a,aac,ac3,eac3,ogg,wav,wma,opus"
         )
         .action(clearMusicAction);
 

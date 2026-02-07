@@ -1,4 +1,4 @@
-import { exec } from "@/shared/functions/exec.ts";
+import { execFile } from "@/shared/functions/execFile.ts";
 
 /**
  * Runs yt-dlp in the shell and returns the output. Throws an error if the command fails.
@@ -10,5 +10,5 @@ import { exec } from "@/shared/functions/exec.ts";
  * @throws {Error}
  */
 export function runYtDlp(...args: string[]): Promise<string> {
-    return exec("yt-dlp", ...args);
+    return execFile("yt-dlp", ...args);
 }

@@ -6,6 +6,7 @@ import { noProcessing } from "@/commands/download/_options/noProcessing.ts";
 import { noThumbnail } from "@/commands/download/_options/noThumbnail.ts";
 import { outputDir } from "@/commands/download/_options/outputDir.ts";
 import { playlist } from "@/commands/download/_options/playlist.ts";
+import { thumbnailsDir } from "@/commands/download/_options/thumbnailsDir.ts";
 import { downloadAction } from "@/commands/download/downloadAction.ts";
 
 export {
@@ -27,6 +28,7 @@ export const createDownloadCommand = () => (program: Command) => {
         .addOption(noProcessing)
         .addOption(noDefaultArgs)
         .addOption(outputDir)
+        .addOption(thumbnailsDir)
         .action(downloadAction);
 
     return program;

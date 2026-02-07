@@ -5,3 +5,4 @@ node_modules
 *.flac
 .env
 .hidden.*
+.cache

@@ -1,9 +1,10 @@
-import { rename as move, writeFile } from "node:fs/promises";
+import { rename as move } from "node:fs/promises";
 import { basename, resolve } from "node:path";
 
+import { ROOT_PATH } from "@/constants.ts";
 import { runFFmpeg } from "@/functions/runFFmpeg.ts";
-import { ROOT_PATH } from "@/shared/constants.ts";
 import { fileExists } from "@/shared/functions/fileExists.ts";
+import { logProcess } from "@/shared/pipelines/logProcess.ts";
 
 /**
  * It embeds a thumbnail into a music file. Uses FFmpeg under the hood to achieve it.
@@ -13,7 +14,7 @@ import { fileExists } from "@/shared/functions/fileExists.ts";
  */
 export async function embedThumbnail(
     music_file: string,
-    thumbnail_file: string
+    thumbnail_file: string,
 ): Promise<void> {
     const output_path = resolve(ROOT_PATH, "out", basename(music_file));
     const args = [
@@ -21,9 +22,9 @@ export async function embedThumbnail(
         // "-loglevel",
         // "error",
         "-i",
-        `"${music_file}"`,
+        music_file, // `"${music_file}"`,
         "-i",
-        `"${thumbnail_file}"`,
+        thumbnail_file, // `"${thumbnail_file}"`,
         "-map",
         "0:a",
         "-map",
@@ -36,27 +37,14 @@ export async function embedThumbnail(
         'comment="Cover (front)"',
         "-disposition:v",
         "attached_pic",
-        `"${output_path}"`,
+        output_path, // `"${output_path}"`,
     ];
 
-    await runFFmpeg(...args).then((output) =>
-        writeFile(
-            resolve(
-                ROOT_PATH,
-                "logs/ffmpeg",
-                new Date()
-                    .toISOString()
-                    .replace("T", "_")
-                    .replace(/:/g, "-")
-                    .concat(".log")
-            ),
-            output
-        )
-    );
+    await runFFmpeg(...args).then(logProcess("ffmpeg"));
 
     if (!(await fileExists(output_path)))
         throw new Error(
-            "Failed to embed thumbnail! check FFmpeg logs for more info."
+            "Failed to embed thumbnail! check FFmpeg logs for more info.",
         );
 
     await move(output_path, music_file);

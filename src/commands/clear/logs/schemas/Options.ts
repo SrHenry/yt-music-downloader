@@ -1,43 +1,30 @@
-import {
-    createRule,
-    Experimental,
-    object,
-    string,
-    useCustomRules,
-    type GetTypeGuard,
-} from "@srhenry/type-utils";
+import type { Infer } from "@srhenry/type-utils";
 
-export type OptionsSchema = GetTypeGuard<typeof OptionsSchema>;
+import { createRule, object, string } from "@srhenry/type-utils";
+
+export type OptionsSchema = Infer<typeof OptionsSchema>;
 
 const StringNumber = createRule({
-    name: "Custom.StringNumber",
-    message: "number",
+    name: "yt-music-downloader.String.StringNumber",
+    message: "string must contain a number!",
     handler: (value: string) => () => !Number.isNaN(Number(value)),
 });
 const Integer = createRule({
-    name: "Custom.StringNumber.Integer",
-    message: "int",
+    name: "yt-music-downloader.String.StringNumber.Integer",
+    message: "string must contain an integer number!",
     handler: (value: string) => () => Number.isInteger(Number(value)),
 });
 
 const Positive = createRule({
-    name: "Custom.StringNumber.Positive",
-    message: "positive",
+    name: "yt-music-downloader.String.StringNumber.Positive",
+    message: "stirng must contain a positive integer number!",
     handler: (value: string) => () => Number(value) > 0,
 });
 
-const Time = () =>
-    useCustomRules(string(), StringNumber(), Integer(), Positive());
+const Time = () => string().use(StringNumber()).use(Integer()).use(Positive());
 
 const OptionsSchema = object({
     time: Time(),
 });
-
-Experimental.Validator.setValidatorMessage(
-    {
-        time: "must be a positive integer!",
-    },
-    OptionsSchema
-);
 
 export const Options = () => OptionsSchema;

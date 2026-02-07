@@ -1,4 +1,4 @@
-import { execAsync } from "./execAsync.ts";
+import { execAsync } from "@/shared/functions/execAsync.ts";
 
 /**
  * Runs a command in the shell and returns the output. Throws an error if the command fails.

@@ -1,12 +1,19 @@
-import {
-    Experimental,
-    type GetTypeGuard,
-    object,
-    string,
-} from "@srhenry/type-utils";
+import type { GetValidatorReturn } from "@/shared/types/GetValidatorReturn.ts";
 
 import { runYtDlp } from "@/functions/runYtDlp.ts";
 import { error, info } from "@/log/index.ts";
+import {
+    type ErrorResult,
+    type Infer,
+    type Result,
+    type SucessfulResult,
+    type ValidationError,
+    ValidationErrors,
+    isInstanceOf,
+    match,
+    object,
+    string,
+} from "@srhenry/type-utils";
 
 //TODO: Refactor and abstract this file to more modules
 
@@ -15,26 +22,23 @@ const MetadataSchema = () =>
         id: string(),
     });
 
-type Metadata = GetTypeGuard<ReturnType<typeof MetadataSchema>>;
-type MetadataValidationError = Experimental.ValidationError<
-    unknown,
-    Metadata[]
->;
+type Metadata = Infer<ReturnType<typeof MetadataSchema>>;
+type MetadataValidationError = ValidationError<unknown, Metadata>;
+type MetadataErrors = ValidationErrors<MetadataValidationError>;
+
+const parseResult = match<GetValidatorReturn<Metadata>>()
+    .with(
+        isInstanceOf(ValidationErrors),
+        (r) => [r, null] as ErrorResult<MetadataErrors>,
+    )
+    .default<SucessfulResult<Metadata>>((r) => [null, r]).exec;
 
 const validateMetadata = (
-    metadata: unknown
-): Experimental.Result<
-    Metadata,
-    Experimental.ValidationErrors<MetadataValidationError[]>
-> => {
-    const result = Experimental.validate(metadata, MetadataSchema(), false);
+    metadata: unknown,
+): Result<Metadata, ValidationErrors<MetadataValidationError>> => {
+    const result = MetadataSchema().validator(false).validate(metadata);
 
-    return result instanceof Experimental.ValidationErrors
-        ? [
-              <Experimental.ValidationErrors<MetadataValidationError[]>>result,
-              null,
-          ]
-        : [null, result];
+    return parseResult(result);
 };
 
 /**
@@ -65,7 +69,7 @@ export async function extractYTContentID(yt_src: string) {
     if (err) {
         error(
             "YouTube source's metadata is not compliant with defined schema!\n %s",
-            err.toString()
+            err.toString(),
         );
 
         throw new TypeError("Unexpected medatata value. Missing properties.");
