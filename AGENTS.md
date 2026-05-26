@@ -179,6 +179,17 @@ Work in the worktree (`/tmp/` prefix — ephemeral, not inside the main repo che
 - Run `npx eslint .` and `npx tsc --noEmit` frequently to stay green
 - Commit using Conventional Commits with emoji format
 
+### Upstream issues (`@srhenry/type-utils`)
+
+When genuine problems are found in `@srhenry/type-utils` (bugs, missing types, API gaps, behavioral quirks), the AI harness **must**:
+
+1. Document the problem — minimal reproduction, expected vs actual behavior, affected version
+2. Check `CONTRIBUTING.md` in the [type-utils repo](https://github.com/SrHenry/type-utils) for issue/PR guidelines (currently no CONTRIBUTING.md exists — follow general best practices until one is added)
+3. File an issue via `gh issue create --repo SrHenry/type-utils` with the documented details
+4. Reference the filed issue number in the consuming code's comments or commit message
+
+Do **not** file issues for usage misunderstandings or features that are working as designed — only genuine bugs, type errors, or missing functionality that blocks this project.
+
 ### 4. Push & Create Draft PR
 
 All non-urgent work (features, fixes, refactors) must go through a PR before merging. **Create the PR as a draft by default** — this signals work-in-progress and prevents accidental merges before review.
