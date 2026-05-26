@@ -21,6 +21,11 @@ jobs:
     uses: ./.github/workflows/opencode-retry.yml
     with:
       persist-credentials: true
+    permissions:
+      id-token: write
+      contents: write
+      pull-requests: write
+      issues: write
     secrets: inherit
 
   review-pr:
@@ -35,6 +40,10 @@ jobs:
         the PR is clean, say so — but be critical by default. Reference
         AGENTS.md for project conventions before flagging anything as
         a violation.
+    permissions:
+      id-token: write
+      contents: read
+      pull-requests: write
     secrets: inherit
 
   triage-issue:
@@ -49,4 +58,8 @@ jobs:
         lacks reproduction steps, version info, or expected vs
         actual behavior. Propose a fix strategy if the root cause
         is identifiable. Reference AGENTS.md for project conventions.
+    permissions:
+      id-token: write
+      contents: read
+      issues: write
     secrets: inherit
