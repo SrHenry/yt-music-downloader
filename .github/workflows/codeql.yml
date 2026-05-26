@@ -5,6 +5,8 @@ on:
   push:
     branches: [main]
   pull_request:
+    # NOTE: Fork PRs cannot upload SARIF (GITHUB_TOKEN is read-only).
+    # Use pull_request_target if external contributor scanning is needed.
     branches: [main]
   schedule:
     - cron: '0 5 * * 1'
@@ -31,7 +33,6 @@ jobs:
           - language: javascript-typescript
             build-mode: none
           - language: actions
-            build-mode: none
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -40,7 +41,7 @@ jobs:
         uses: github/codeql-action/init@v4
         with:
           languages: ${{ matrix.language }}
-          build-mode: ${{ matrix.build-mode }}
+          build-mode: ${{ matrix.build-mode || 'none' }}
           config-file: ./.github/codeql/codeql-config.yml
 
       - name: Perform CodeQL Analysis
