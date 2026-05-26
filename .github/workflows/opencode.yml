@@ -34,7 +34,7 @@ jobs:
           persist-credentials: true
 
       - name: Run OpenCode
-        uses: anomalyco/opencode/github@latest
+        uses: anomalyco/opencode/github@v1.15.10
         env:
           NVIDIA_API_KEY: ${{ secrets.NVIDIA_AI_API_KEY }}
         with:
@@ -57,7 +57,7 @@ jobs:
           persist-credentials: false
 
       - name: Review PR
-        uses: anomalyco/opencode/github@latest
+        uses: anomalyco/opencode/github@v1.15.10
         env:
           NVIDIA_API_KEY: ${{ secrets.NVIDIA_AI_API_KEY }}
         with:
@@ -85,7 +85,7 @@ jobs:
           persist-credentials: false
 
       - name: Investigate Issue
-        uses: anomalyco/opencode/github@latest
+        uses: anomalyco/opencode/github@v1.15.10
         env:
           NVIDIA_API_KEY: ${{ secrets.NVIDIA_AI_API_KEY }}
         with:
