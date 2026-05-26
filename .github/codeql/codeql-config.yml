@@ -1,0 +1,16 @@
+name: Custom CodeQL Configuration
+
+queries:
+  - uses: security-extended
+  - uses: security-and-quality
+
+paths:
+  - src
+
+paths-ignore:
+  - '**/node_modules'
+  - '**/*.test.ts'
+  - out
+  - temp
+  - logs
+  - bin
