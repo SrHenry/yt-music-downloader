@@ -73,6 +73,22 @@ No test suite — project has no tests.
 - No semicolons
 - Single quotes
 
+### YAML files (`*.yml`, `*.yaml`)
+
+- 2-space indent — YAML standard (never 4-space)
+- Always validate with `yamllint` or equivalent before committing
+- No trailing whitespace, no tab characters
+- Use `"` only when a value contains `:` or `#`; prefer unquoted strings
+
+### Other indentation-sensitive files
+
+- **JSON** (`*.json`, `*.jsonc`): 2-space indent (standard)
+- **TOML** (`*.toml`): 2-space indent (standard)
+- **Markdown** (`*.md`): 2-space indent for nested lists; 4-space for code blocks inside markdown
+- **Shell scripts** (`*.sh`, `bin/*`): 4-space indent (match `.editorconfig`)
+- **Dockerfile**: 2-space indent for RUN continuation lines (`\`)
+- **`.editorconfig`** is the source of truth — when in doubt, check it first
+
 ### Lint (ESLint flat config)
 
 - `no-unused-vars` and `no-undef` are warnings, not errors
