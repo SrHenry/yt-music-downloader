@@ -179,12 +179,16 @@ Work in the worktree (`/tmp/` prefix — ephemeral, not inside the main repo che
 - Run `npx eslint .` and `npx tsc --noEmit` frequently to stay green
 - Commit using Conventional Commits with emoji format
 
-### 4. Push & Create PR
+### 4. Push & Create Draft PR
+
+All non-urgent work (features, fixes, refactors) must go through a PR before merging. **Create the PR as a draft by default** — this signals work-in-progress and prevents accidental merges before review.
 
 ```sh
 git push -u origin feat/<topic>
-gh pr create --base main --title "type: :emoji: description" --body "..."
+gh pr create --draft --base main --title "type: :emoji: description" --body "..."
 ```
+
+Only use `--draft=false` (or omit `--draft`) when the user explicitly requests a ready-for-review PR, or when the change is trivially complete at push time. Urgent hotfixes (`hotfix/<topic>`) that skip the PR phase are the only exception — but only when explicitly requested by the user.
 
 ### 5. Iterate
 
