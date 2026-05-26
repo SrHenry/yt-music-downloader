@@ -23,6 +23,15 @@ Do **NOT** create branches, worktrees, or write code until all of the following 
 
 If the request is vague or ambiguous: ask targeted questions. Better to over-clarify than to assume. Never start implementation on unclear intent.
 
+### Self-updating knowledge
+
+The AI harness **must** persist newly learned project knowledge into this file (`AGENTS.md`) as it discovers it during sessions:
+
+- **Auto-persist** (no user confirmation needed): facts that are obvious, non-controversial, and don't contradict existing content — e.g. a newly discovered gotcha, an undocumented convention observed in the codebase, a behavioral quirk of a dependency, a missing entry in directory ownership
+- **Propose first** (require user confirmation): additions that contradict or override previously established conventions, architectural changes, controversial opinions, or anything that reshapes the project's status quo — present the proposed addition and ask before writing
+
+When in doubt, propose first. It is always better to ask than to silently overwrite established guidelines.
+
 ### EXPLORATORY: conversational mode
 
 - No branches, worktrees, or PRs
