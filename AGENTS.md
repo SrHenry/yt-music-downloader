@@ -148,11 +148,19 @@ This is a **blocking gate** — do not proceed to step 2 until all items below a
 
 ### 2. Create Ephemeral Worktree + Branch
 
-Create both together — the worktree stays alive for the entire PR lifecycle:
+**Always fetch the latest remote state before branching** to avoid branching from outdated work. Run from the main repo checkout:
 
 ```sh
-git worktree add /tmp/Músicas-<topic> -b feat/<topic> origin/main
+git fetch origin <base>
 ```
+
+Then create worktree + branch together — the worktree stays alive for the entire PR lifecycle:
+
+```sh
+git worktree add /tmp/Músicas-<topic> -b feat/<topic> origin/<base>
+```
+
+Skipping `git fetch` is only acceptable when the user explicitly confirms the local ref is up to date.
 
 Work in the worktree (`/tmp/` prefix — ephemeral, not inside the main repo checkout). **The first step after creating the worktree must be `yarn install`** to set up dependencies and trigger the postinstall script (which copies `.env.example` → `.env` if missing). Do not write code or run builds until `yarn install` completes.
 
