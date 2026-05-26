@@ -1,5 +1,5 @@
 import type { Fn, TupleTools, TypeGuard } from "@srhenry/type-utils";
-import { asTypeGuard, helpers, useSchema } from "@srhenry/type-utils";
+import { asTypeGuard, createInlineRule, helpers, useSchema } from "@srhenry/type-utils";
 
 type MapFuncGuards<TParams extends [...number[]]> = TParams extends [
     infer T extends number,
@@ -21,17 +21,18 @@ export function func<TParams extends [...any[]] = [], TReturn = any>(
 ): TypeGuard<Fn<TParams, any>>;
 
 export function func(...params: number[]) {
-    return useSchema(
-        asTypeGuard<Fn<any[], any>>(
-            (value) =>
-                helpers.isFunction(value) &&
-                params.some((p) => p === value.length),
-            {
-                kind: "function",
-                context: {
-                    acceptedParamLengths: params,
-                },
-            },
-        ),
+    const baseGuard = asTypeGuard<Fn<any[], any>>(
+        (value) => helpers.isFunction(value),
+        {
+            kind: "function",
+        },
     );
+
+    // TODO: Provide both type params as workaround — named overload unreachable with TSubject only (see SrHenry/type-utils#40)
+    const hasParamLength = createInlineRule<Fn<any[], any>, "hasParamLength">(
+        "hasParamLength",
+        (value) => params.some((p) => p === value.length),
+    );
+
+    return useSchema(baseGuard).use(hasParamLength);
 }

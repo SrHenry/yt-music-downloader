@@ -13,7 +13,6 @@ import { countSucessfullyRemoved } from "@/commands/_shared/pipelines/countSuces
 import { parse } from "@/commands/clear/logs/pipelines/Options/parse.ts";
 import { validate } from "@/commands/clear/logs/pipelines/Options/validate.ts";
 import { extractFullPath } from "@/shared/functions/extractFullPath.ts";
-import { $do } from "@/shared/pipelines/do.ts";
 import { listDir } from "@/shared/pipelines/listDir.ts";
 import { logExceptions } from "@/shared/pipelines/logExceptions.ts";
 import { map, Mapper } from "@/shared/pipelines/map.ts";
@@ -93,7 +92,7 @@ const clearLogs = () => (time: number) =>
         .pipeAsync(filterStatsOlderThan(time))
         .pipeAsync(map(fileToPath()))
         .pipeAsync(removeFiles())
-        .pipeAsync($do(logExceptions("Error while deleting logs: %s")))
+        .tapAsync(logExceptions("Error while deleting logs: %s"))
         .pipeAsync(countSucessfullyRemoved())
         .pipeAsync(printMessage(`Removed :{count} log files.`))
         .depipe();

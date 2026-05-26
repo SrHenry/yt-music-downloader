@@ -1,16 +1,11 @@
-import type { GetValidatorReturn } from "@/shared/types/GetValidatorReturn.ts";
-
 import { runYtDlp } from "@/functions/runYtDlp.ts";
 import { error, info } from "@/log/index.ts";
+import { parseValidationResult } from "@/shared/pipelines/parseValidationResult.ts";
 import {
-    type ErrorResult,
     type Infer,
     type Result,
-    type SucessfulResult,
     type ValidationError,
     ValidationErrors,
-    isInstanceOf,
-    match,
     object,
     string,
 } from "@srhenry/type-utils";
@@ -24,14 +19,8 @@ const MetadataSchema = () =>
 
 type Metadata = Infer<ReturnType<typeof MetadataSchema>>;
 type MetadataValidationError = ValidationError<unknown, Metadata>;
-type MetadataErrors = ValidationErrors<MetadataValidationError>;
 
-const parseResult = match<GetValidatorReturn<Metadata>>()
-    .with(
-        isInstanceOf(ValidationErrors),
-        (r) => [r, null] as ErrorResult<MetadataErrors>,
-    )
-    .default<SucessfulResult<Metadata>>((r) => [null, r]).exec;
+const parseResult = parseValidationResult<Metadata>();
 
 const validateMetadata = (
     metadata: unknown,

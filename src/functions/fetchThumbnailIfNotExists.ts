@@ -72,6 +72,7 @@ export async function fetchThumbnailIfNotExists(
         yt_src,
         albumName,
         thumbnailDir,
-        musicMetadata?.thumbnails ?? null,
+        // TODO: Remove cast once Infer<FluentSchema<T[], ...>> resolves correctly (see SrHenry/type-utils#39)
+        (musicMetadata?.thumbnails ?? null) as Thumbnail[] | null,
     );
 }

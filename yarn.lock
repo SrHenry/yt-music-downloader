@@ -238,13 +238,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@srhenry/type-utils@^0.7.0":
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/@srhenry/type-utils/-/type-utils-0.7.0.tgz#5bcc258e89c6adf1685175de6ef454aa0130d6ed"
-  integrity sha512-/eYCcChey48yl2TUvtYgZB4vT7rxBHSTOIxluVWgf7u3lppy8gDgqgaCjKOCi8+WIdzZ31k/DAvFHjf4wz/Zyg==
-  dependencies:
-    "@types/node" "^25.6.0"
-    typescript "6.0.3"
+"@srhenry/type-utils@0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@srhenry/type-utils/-/type-utils-0.8.1.tgz#16a1326809f08cf9f62efa97f671b7bbd3f68114"
+  integrity sha512-YOI/ijaCw1/t7SbtKGyRIvyS78KQw7S60hhbGI9KvZaE1AIlAySJdLsleFqEynYnuMxiOCLMRRDICfVZgq1XYw==
 
 "@swc/core-darwin-arm64@1.15.33":
   version "1.15.33"
@@ -393,7 +390,7 @@
   resolved "https://registry.yarnpkg.com/@types/ms/-/ms-2.1.0.tgz#052aa67a48eccc4309d7f0191b7e41434b90bb78"
   integrity sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==
 
-"@types/node@^25.6.0", "@types/node@^25.8.0":
+"@types/node@^25.8.0":
   version "25.8.0"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-25.8.0.tgz#d13033397d1c186876bed4c9b9d7f3f962097eb3"
   integrity sha512-TCFSk8IZh+iLX1xtksoBVtdmgL+1IX0fC9BeU4QqFSuNdN/K+HUlhqOzEmSYYpZUVsLYcPqc9KX+60iDuninSQ==
@@ -894,7 +891,7 @@ type-check@^0.4.0, type-check@~0.4.0:
   dependencies:
     prelude-ls "^1.2.1"
 
-typescript@6.0.3, typescript@^6.0.3:
+typescript@^6.0.3:
   version "6.0.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-6.0.3.tgz#90251dc007916e972786cb94d74d15b185577d21"
   integrity sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==

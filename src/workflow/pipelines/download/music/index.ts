@@ -1,5 +1,5 @@
 import { Experimental, helpers } from "@srhenry/type-utils";
-const { pipe, enpipe, pipeline } = Experimental;
+const { pipe, apply, callWith, pipeline } = Experimental;
 
 import chalk from "chalk";
 
@@ -8,7 +8,6 @@ import type { DownloadOptions } from "@/workflow/pipelines/download/music/types/
 import { printProcessingEntry } from "@/functions/printProcessingEntry.ts";
 import { execFile } from "@/shared/functions/execFile.ts";
 import { append } from "@/shared/pipelines/append.ts";
-import { $doAsync } from "@/shared/pipelines/do.ts";
 import { enpipeIf } from "@/shared/pipelines/enpipeIf.ts";
 import { forEachAsync } from "@/shared/pipelines/forEachAsync.ts";
 import DefaultOptions from "@/workflow/pipelines/download/music/constants/DefaultDownloadOptions.ts";
@@ -41,9 +40,10 @@ const fillNullables = (defaults: RequiredOptions, options: DownloadOptions) => {
 const parseOptions = (options?: DownloadOptions | null): RequiredOptions =>
     options
         ? pipe(options)
-              .pipe(enpipe(fillNullables, DefaultOptions))
-              .pipe((s) => helpers.arrayToObject(s))
-              .depipe()
+            .pipe(apply(fillNullables, DefaultOptions))
+            // TODO: Remove explicit type param once arrayToObject overloads infer through pipeline (see SrHenry/type-utils#39)
+            .pipe((s) => helpers.arrayToObject<RequiredOptions>(s))
+            .depipe()
         : DefaultOptions;
 
 const parseYtDlpParams = ({
@@ -71,27 +71,28 @@ const parseFetchArgs = (options: RequiredOptions) => ({
 const musicPipeline: Pipeline = (options) => (source) =>
     pipe(Promise.resolve(source))
         .pipeAsync(fetchMetadata())
+        .tapAsync(async (_) => {
+            if (options.thumbnailsDir)
+                await execFile("mkdir", "-p", options.thumbnailsDir);
+        })
         .pipeAsync(
-            $doAsync(async () => {
-                if (options.thumbnailsDir)
-                    await execFile("mkdir", "-p", options.thumbnailsDir);
-            }),
-        )
-        .pipeAsync(
+            // TODO: Remove @ts-expect-error once enpipeIf union return type is compatible with pipeAsync signature
+            // @ts-expect-error
             enpipeIf(
                 !options.noThumbnail,
                 fetchThumbnail(options.thumbnailsDir),
                 append({ thumbnail_file: null }),
             ),
         )
-        .pipeAsync(
-            $doAsync(async () => {
-                if (options.outputDir)
-                    await execFile("mkdir", "-p", options.outputDir);
-            }),
-        )
+        .tapAsync(async (_) => {
+            if (options.outputDir)
+                await execFile("mkdir", "-p", options.outputDir);
+        })
         .pipeAsync(fetchMusic(parseFetchArgs(options)))
-        .pipeAsync(enpipeIf(!options.noThumbnail, embedThumbnail()))
+        .pipeAsync(
+            // TODO: Remove cast once enpipeIf union return type is compatible with pipeAsync signature
+            enpipeIf(!options.noThumbnail, embedThumbnail()),
+        )
         .pipeAsync(finish())
         .depipe();
 
@@ -99,32 +100,34 @@ const playlistPipeline: Pipeline = (options) => (source) =>
     pipe(Promise.resolve(source))
         // .pipeAsync(fetchMetadata())
         .pipeAsync(fetchPlaylistContentList())
-        .pipeAsync(
-            $doAsync(async ({ metadata: { entries } }) => {
-                if (entries.length > 0 && options.outputDir)
-                    await execFile("mkdir", "-p", options.outputDir);
-            }),
-        )
+        .tapAsync(async ({ metadata: { entries } }) => {
+            if (entries.length > 0 && options.outputDir)
+                await execFile("mkdir", "-p", options.outputDir);
+        })
         .pipeAsync(
             forEachAsync(
                 (ctx) => ctx.metadata.entries,
                 ({ id: yt_src }, _, i, total) =>
                     printProcessingEntry(i + 1, total, () =>
-                        pipe(Promise.resolve({ yt_src, metadata: null }))
-                            .pipeAsync(
-                                enpipeIf(
-                                    !options.noThumbnail,
-                                    fetchThumbnail(options.thumbnailsDir),
-                                    append({ thumbnail_file: null }),
-                                ),
-                            )
-                            .pipeAsync(fetchMusic(parseFetchArgs(options)))
-                            .pipeAsync(
-                                enpipeIf(
-                                    !options.noThumbnail,
-                                    embedThumbnail(),
-                                ),
-                            ),
+            pipe(Promise.resolve({ yt_src, metadata: null }))
+                .pipeAsync(
+                    // TODO: Remove @ts-expect-error once enpipeIf union return type is compatible with pipeAsync signature
+                    // @ts-expect-error
+                    enpipeIf(
+                        !options.noThumbnail,
+                        fetchThumbnail(options.thumbnailsDir),
+                        append({ thumbnail_file: null }),
+                    ),
+                )
+                .pipeAsync(fetchMusic(parseFetchArgs(options)))
+                .pipeAsync(
+                    // TODO: Remove cast once enpipeIf union return type is compatible with pipeAsync signature
+                    enpipeIf(
+                        !options.noThumbnail,
+                        embedThumbnail(),
+                    ),
+                )
+                .depipe(),
                     ),
             ),
         )
@@ -147,7 +150,7 @@ export async function downloadMusicPipeline(
     options: DownloadOptions = DefaultOptions,
 ): Promise<void> {
     return await pipeline(parseOptions)
-        .pipe(enpipe(options))
+        .pipe(callWith(options))
         .pipe(
             enpipeIf(
                 ({ playlist }) => playlist,
@@ -155,6 +158,7 @@ export async function downloadMusicPipeline(
                 musicPipeline,
             ),
         )
-        .pipe(enpipe(source))
+        .pipe(callWith(source))
+        .depipe()
         .catch(printError);
 }
