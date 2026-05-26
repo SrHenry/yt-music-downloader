@@ -21,6 +21,12 @@ jobs:
     uses: ./.github/workflows/opencode-retry.yml
     with:
       persist-credentials: false
+      prompt: |
+        Detect your environment: if this is a pull request context, act as
+        a PR assistant — read the diff, address the comment or task, and
+        push fixes if needed. If this is an issue context, act as an issue
+        triager — investigate, gather context, and propose a fix strategy.
+        Reference AGENTS.md for project conventions.
     permissions:
       id-token: write
       contents: write
@@ -29,7 +35,11 @@ jobs:
     secrets: inherit
 
   review-pr:
-    if: github.event_name == 'pull_request' && !github.event.pull_request.draft
+    if: |
+      (github.event_name == 'pull_request' && !github.event.pull_request.draft) ||
+      (github.event_name == 'issue_comment' &&
+      github.event.issue.pull_request &&
+      (contains(github.event.comment.body, '/review') || contains(github.event.comment.body, '/oc /review') || contains(github.event.comment.body, '/opencode /review')))
     uses: ./.github/workflows/opencode-retry.yml
     with:
       persist-credentials: false
