@@ -8,8 +8,6 @@ paths:
   - src
 
 paths-ignore:
-  - '**/node_modules'
-  - '**/*.test.ts'
   - out
   - temp
   - logs
