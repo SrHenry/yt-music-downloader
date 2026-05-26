@@ -38,16 +38,18 @@ jobs:
 
     - name: Retry on failure
       if: failure() && github.run_attempt < inputs.max-attempts
-      uses: actions/github-script@v7
-      with:
-        script: |
-          const delay = github.run_attempt <= 2 ? 0 : Math.pow(2, github.run_attempt - 2) * 10
-          if (delay > 0) {
-            core.info(`Exponential backoff: waiting ${delay}s before retry...`)
-            await new Promise(r => setTimeout(r, delay * 1000))
-          }
-          await github.rest.actions.rerunWorkflowFailedJobs({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            run_id: context.runId
-          })
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      shell: bash
+      run: |
+        ATTEMPT=${{ github.run_attempt }}
+        if [ "$ATTEMPT" -le 2 ]; then
+          DELAY=0
+        else
+          DELAY=$(( 10 * (2 ** (ATTEMPT - 3)) ))
+        fi
+        if [ "$DELAY" -gt 0 ]; then
+          echo "Exponential backoff: waiting ${DELAY}s before retry..."
+          sleep "$DELAY"
+        fi
+        gh run rerun ${{ github.run_id }} --failed

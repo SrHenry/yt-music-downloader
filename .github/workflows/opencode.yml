@@ -20,7 +20,7 @@ jobs:
       (contains(github.event.comment.body, '/oc') || contains(github.event.comment.body, '/opencode')))
     uses: ./.github/workflows/opencode-retry.yml
     with:
-      persist-credentials: true
+      persist-credentials: false
     permissions:
       id-token: write
       contents: write
