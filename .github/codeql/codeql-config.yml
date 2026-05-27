@@ -9,7 +9,9 @@ paths:
 
 # paths-ignore entries are defensive — they're outside src/ so CodeQL wouldn't
 # scan them anyway. If paths is ever removed/widened, these will take effect.
+# src/node_modules is included per the official CodeQL docs pattern.
 paths-ignore:
+  - src/node_modules
   - out
   - temp
   - logs

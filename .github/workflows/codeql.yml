@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: codeql-${{ github.ref }}
+  group: codeql-${{ github.ref }}-${{ github.event_name }}
   cancel-in-progress: true
 
 jobs:
@@ -39,6 +39,14 @@ jobs:
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
+        if: ${{ matrix.build-mode == '' }}
+        with:
+          languages: ${{ matrix.language }}
+          config-file: ./.github/codeql/codeql-config.yml
+
+      - name: Initialize CodeQL (with build-mode)
+        uses: github/codeql-action/init@v4
+        if: ${{ matrix.build-mode != '' }}
         with:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
