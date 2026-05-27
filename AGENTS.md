@@ -25,12 +25,52 @@ If the request is vague or ambiguous: ask targeted questions. Better to over-cla
 
 ### Self-updating knowledge
 
-The AI harness **must** persist newly learned project knowledge into this file (`AGENTS.md`) as it discovers it during sessions:
+The AI harness **must** persist newly learned project knowledge into this file (`AGENTS.md`) as it discovers it during sessions.
 
-- **Auto-persist** (no user confirmation needed): facts that are obvious, non-controversial, and don't contradict existing content — e.g. a newly discovered gotcha, an undocumented convention observed in the codebase, a behavioral quirk of a dependency, a missing entry in directory ownership
-- **Propose first** (require user confirmation): additions that contradict or override previously established conventions, architectural changes, controversial opinions, or anything that reshapes the project's status quo — present the proposed addition and ask before writing
+#### Auto-persist criteria (all three must be true)
 
-When in doubt, propose first. It is always better to ask than to silently overwrite established guidelines.
+1. **Verifiable from source** — the fact can be confirmed by reading code, config, or dependency behavior (not subjective opinion)
+2. **Fills a gap** — no existing rule, gotcha, or entry already covers it
+3. **No behavior change** — the fact doesn't alter how the agent should act (that's propose-first territory)
+
+If any criterion is uncertain → propose first instead.
+
+#### Section routing table
+
+| Discovery type | Target section |
+|----------------|---------------|
+| Build/runtime gotcha not covered | Gotchas |
+| Directory purpose not documented | Directory Ownership |
+| Missing Prohibition (behavior that must never happen) | Prohibitions |
+| New command or script not in table | Build & Development Commands or bin/ Scripts |
+| Dependency behavioral quirk | Gotchas or Architecture |
+| Import/resolution pattern | Code Conventions → Import style |
+| Pipeline pattern discovery | Architecture or Directory Ownership |
+| yt-dlp/ffmpeg quirk | Gotchas |
+
+#### Dedup rule
+
+Before adding, scan existing content. Amend existing entries rather than adding parallel ones. Keeps the file tight and avoids contradiction.
+
+#### Pending proposals
+
+Unconfirmed proposals that the session ends before confirming **must** be persisted to TASKS.md as:
+
+```markdown
+- [ ] AGENTS.md: <proposed change summary>
+  - **Blocked**: needs-user-confirmation
+  - **Details**: <what to add/change and where>
+  - **Files**: AGENTS.md
+```
+
+#### Retract mechanism
+
+If an auto-persisted fact is later discovered to be wrong:
+
+```markdown
+- ~~ALWAYS use X for Y — reason given~~ — retracted: <why it was wrong>
+- ALWAYS use Z for Y — <correct reason>
+```
 
 ### EXPLORATORY: conversational mode
 
@@ -38,13 +78,83 @@ When in doubt, propose first. It is always better to ask than to silently overwr
 - Use search, read, and analysis tools freely
 - If exploration leads to a code change, re-classify as CODE-PRODUCING and start the scope gate from the top
 
+## Task Management
+
+### Core Protocol
+
+1. Read `TASKS.md` on session start — understand current priorities before acting
+2. Claim a task by appending `(@agent-name)` to its checkbox line
+3. Remove completed tasks from the file (history lives in git log)
+4. Create new tasks as needed during work
+
+### Task Format
+
+```markdown
+- [ ] Task title
+  - **ID**: stable-kebab-id
+  - **Details**: context the agent can't discover on its own
+  - **Files**: path/to/file.ts, path/to/other.ts
+  - **Acceptance**: testable criterion for "done"
+  - **Blocked by**: comma-separated-task-ids  (unblocked when all referenced IDs no longer exist)
+  - **Blocked**: free-form reason for external blocks (any non-empty value = blocked)
+  - [ ] Sub-task 1
+  - [ ] Sub-task 2
+```
+
+### Core Metadata Fields (always available)
+
+| Field | Purpose |
+|-------|---------|
+| `**ID**` | Stable identifier for `**Blocked by**:` references (kebab-case) |
+| `**Details**` | Context the agent can't discover on its own |
+| `**Files**` | Starting points for the agent to read |
+| `**Acceptance**` | Testable criterion for "done" |
+| `**Blocked by**` | Task IDs; unblocked when all referenced IDs no longer exist in file |
+| `**Blocked**` | Free-form reason for external blocks; any non-empty value marks task as blocked |
+
+### Opt-in Metadata Fields
+
+The agent evaluates fitness before inserting. If a task fits even one criterion, the corresponding field(s) **must** be populated. A task with zero opt-in fields is fine; a task that should have had them is a violation.
+
+| Field | Add when |
+|-------|----------|
+| `**Plan**` | Task touches 3+ files or involves non-obvious implementation order |
+| `**Parent**` | Task was decomposed from another task that still exists in the file |
+| `**Research**` + `**Last-enriched**` | Task is blocked and agent has gathered context that would otherwise be lost between sessions |
+| `**Estimate**` | Task is non-trivial enough that context-budget planning matters |
+| `**Verification**` | "Done" can't be verified by a single test run — e.g. manual steps, specific command sequences |
+| `**Risk**` + `**Mitigation**` | Task involves migration, breaking changes, dependency swaps, or touching stable/production-critical code |
+| `**Hypothesis**` + `**Success**` + `**Pivot**` + `**Measurement**` + `**Anchor**` | Performance change, architectural refactor, or any change where "did it help?" is genuinely ambiguous |
+| `**Touches**` | Multiple tasks or agents may work in parallel on overlapping files |
+| `**Surfaced-by**` | Task originates from an automated sweep or audit loop rather than a human request |
+| `**Milestone**` | Project has phased roadmap and tasks should be filterable by milestone |
+
+### Writing Good Tasks
+
+- Each task should be independently completable in a single session
+- Sub-tasks are for decomposition within a session; separate tasks are for parallel/async work
+- `**Blocked by**` creates hard dependencies (task can't start); `**Blocked**` is for external blockers (waiting on human, upstream, etc.)
+- Prefer specific `**Acceptance**` criteria over vague descriptions — "output file exists and is valid FLAC" beats "works correctly"
+
+## Prohibitions
+
+- **NEVER** add a build/compile step — `tsconfig.json` has `noEmit: true`; this project runs TS directly via `tsx`
+- **NEVER** use `npm install` — always use `yarn`
+- **NEVER** use `require()` or CommonJS imports — ESM only
+- **NEVER** skip `tsc --noEmit` after code changes — typecheck is mandatory, not optional
+- **NEVER** omit `.ts` extension in local imports — `allowImportingTsExtensions` requires it; always use `@/*` path alias
+- **NEVER** commit with placeholder author identity — stop and ask the user for correct identity before proceeding
+- **NEVER** commit without GPG signing — `commit.gpgsign=true`; use `-S` / `--gpg-sign`
+- **NEVER** silently overwrite established AGENTS.md guidelines — always propose first and get confirmation, even when not in doubt
+- **NEVER** assume a worktree is optional for code-producing work — always use one unless the user explicitly opts out
+
 ## Project Overview
 
 - **Package**: `workflow` (public, delivered by git clone — no npm publish pipeline)
 - **Purpose**: Node.js CLI for downloading YouTube music as FLAC via `yt-dlp` + `ffmpeg`, with metadata/thumbnail embedding
-- **Runtime**: TypeScript runs directly via `tsx` (`noEmit: true` — never add a build/compile step)
+- **Runtime**: TypeScript runs directly via `tsx` (`noEmit: true` — see Prohibitions)
 - **Module system**: ESM only (`"type": "module"` in package.json)
-- **Package manager**: Yarn 1.x (classic) — **never use `npm install`**, always `yarn`
+- **Package manager**: Yarn 1.x (classic) — see Prohibitions
 
 ## Build & Development Commands
 
@@ -54,7 +164,7 @@ When in doubt, propose first. It is always better to ask than to silently overwr
 | `npx tsx src/workflow.ts <command>` | Run the CLI |
 | `./bin/workflow <command>` | Run the CLI via shell script |
 | `npx eslint .` | Lint |
-| `npx tsc --noEmit` | Typecheck (always run after code changes) |
+| `npx tsc --noEmit` | Typecheck (mandatory after code changes) |
 
 No test suite — project has no tests.
 
@@ -107,7 +217,7 @@ No test suite — project has no tests.
 
 - Path alias: `@/*` → `src/*` (tsconfig paths). All local imports use this.
 - All local imports include `.ts` extension (`allowImportingTsExtensions`)
-- ESM only — never use `require()` or CommonJS imports
+- ESM only — see Prohibitions
 
 ### Commit Style
 
@@ -128,7 +238,7 @@ Before making any commit, the AI harness **must** clarify the commit author iden
 - **Default author**: The local then global git config of the root worktree (i.e., `git config user.name` / `git config user.email` resolved from the main repo checkout, not the ephemeral worktree) — the AI harness must ask the user to confirm the author identity before the first commit in a session, unless already specified earlier in the conversation
 - **Verification step**: Before the first commit, check the resolved `user.name` and `user.email` — if they look like placeholder values (e.g., `Test`, `test@test.com`), stop and ask the user for the correct identity before committing
 - **Override**: If the user explicitly requests a different author (e.g., a co-author, bot identity, or different email), use that instead — but never assume an alternate identity without explicit direction
-- **GPG signing**: This repo has `commit.gpgsign=true`. Commits should be GPG-signed (`-S` / `--gpg-sign`) with the key matching the author's email
+- **GPG signing**: This repo has `commit.gpgsign=true` (see Prohibitions)
 
 ### Branch Naming
 
@@ -176,7 +286,7 @@ Work in the worktree (`/tmp/` prefix — ephemeral, not inside the main repo che
 ### 3. Implement
 
 - Make changes in the worktree directory
-- Run `npx eslint .` and `npx tsc --noEmit` frequently to stay green
+- Run `npx eslint .` and `npx tsc --noEmit` after each logical change step — not just "frequently"
 - Commit using Conventional Commits with emoji format
 
 ### Upstream issues (`@srhenry/type-utils`)
@@ -246,5 +356,4 @@ Restore the main repo to its original branch if needed.
 - Thumbnail cache is keyed by YouTube content ID and stored at `THUMBNAILS_PATH`. Existing thumbnails are reused.
 - `runFFmpeg()` catches errors and returns `err.message` as a successful string instead of throwing — callers that expect a throw on failure will miss ffmpeg errors.
 - `processDownload()` returns after the first source in non-playlist mode (it does not iterate all sources) — passing multiple URLs without `--playlist` only processes the first one.
-- `tsconfig.json` has `noEmit: true` — never add a build/compile step; this project runs TS directly.
 - The autoload regex (`/^__autoload\.[cm]?js$/g`) matches `.js`, `.cjs`, `.mjs` but **not** `.ts` — yet the project uses `.ts` autoload files. This works because `tsx` resolves `.ts` to `.js` at runtime, but a new autoload file with a non-standard extension could silently fail to load.
