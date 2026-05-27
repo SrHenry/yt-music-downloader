@@ -41,11 +41,12 @@ jobs:
         uses: github/codeql-action/init@v4
         with:
           languages: ${{ matrix.language }}
-          build-mode: ${{ matrix.build-mode || 'none' }}
+          build-mode: ${{ matrix.build-mode }}
           config-file: ./.github/codeql/codeql-config.yml
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
         with:
           category: '/language:${{ matrix.language }}'
-          filter-mode: diff
+          filter-mode: >-
+            ${{ github.event_name == 'pull_request' && 'diff' || 'default' }}
