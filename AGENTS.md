@@ -254,7 +254,7 @@ Restore the main repo to its original branch if needed.
 
 | Issue | Description | Workaround |
 |-------|-------------|------------|
-| `enpipeIf` union return vs `pipeAsync` | `enpipeIf` returns `Fn1<Input, Output | (Input & {...})>` — union type incompatible with `pipeAsync` signature | `@ts-expect-error` on the `enpipeIf` call inside `.pipeAsync()` |
+| 3-arg `enpipeIf` with boolean condition | When both `fn` and `fnElse` branches produce different return types, the union is incompatible with `pipeAsync`'s expected single-type signature | `@ts-expect-error` — 2-arg boolean form is already fixed (returns `TNewChained` only) |
 
 ### PipelineBox API reference
 

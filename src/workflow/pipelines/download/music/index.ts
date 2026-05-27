@@ -73,24 +73,23 @@ const musicPipeline: Pipeline = (options) => (source) =>
         .tapAsync(async (_) => {
             if (options.thumbnailsDir)
                 await execFile("mkdir", "-p", options.thumbnailsDir);
-        })
+	})
 	.pipeAsync(
-		// @ts-expect-error enpipeIf union return type is incompatible with pipeAsync signature
+		// @ts-expect-error 3-arg enpipeIf with boolean condition produces union of fn/fnElse return types
 		enpipeIf(
-                !options.noThumbnail,
-                fetchThumbnail(options.thumbnailsDir),
-                append({ thumbnail_file: null }),
-            ),
-        )
-        .tapAsync(async (_) => {
-            if (options.outputDir)
-                await execFile("mkdir", "-p", options.outputDir);
-        })
-        .pipeAsync(fetchMusic(parseFetchArgs(options)))
-        .pipeAsync(
-            // TODO: Remove cast once enpipeIf union return type is compatible with pipeAsync signature
-            enpipeIf(!options.noThumbnail, embedThumbnail()),
-        )
+			!options.noThumbnail,
+			fetchThumbnail(options.thumbnailsDir),
+			append({ thumbnail_file: null }),
+		),
+	)
+	.tapAsync(async (_) => {
+		if (options.outputDir)
+			await execFile("mkdir", "-p", options.outputDir);
+	})
+	.pipeAsync(fetchMusic(parseFetchArgs(options)))
+	.pipeAsync(
+		enpipeIf(!options.noThumbnail, embedThumbnail()),
+	)
         .pipeAsync(finish())
         .depipe();
 
@@ -107,22 +106,22 @@ const playlistPipeline: Pipeline = (options) => (source) =>
                 (ctx) => ctx.metadata.entries,
                 ({ id: yt_src }, _, i, total) =>
                     printProcessingEntry(i + 1, total, () =>
-            pipe(Promise.resolve({ yt_src, metadata: null }))
+		pipe(Promise.resolve({ yt_src, metadata: null }))
 			.pipeAsync(
-				// @ts-expect-error enpipeIf union return type is incompatible with pipeAsync signature
+				// @ts-expect-error 3-arg enpipeIf with boolean condition produces union of fn/fnElse return types
 				enpipeIf(
-                        !options.noThumbnail,
-                        fetchThumbnail(options.thumbnailsDir),
-                        append({ thumbnail_file: null }),
-                    ),
-                )
-                .pipeAsync(fetchMusic(parseFetchArgs(options)))
+					!options.noThumbnail,
+					fetchThumbnail(options.thumbnailsDir),
+					append({ thumbnail_file: null }),
+				),
+			)
+			.pipeAsync(fetchMusic(parseFetchArgs(options)))
 			.pipeAsync(
 				enpipeIf(
-                        !options.noThumbnail,
-                        embedThumbnail(),
-                    ),
-                )
+					!options.noThumbnail,
+					embedThumbnail(),
+				),
+			)
                 .depipe(),
                     ),
             ),
