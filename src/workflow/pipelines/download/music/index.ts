@@ -75,8 +75,8 @@ const musicPipeline: Pipeline = (options) => (source) =>
                 await execFile("mkdir", "-p", options.thumbnailsDir);
 	})
 	.pipeAsync(
-		// @ts-expect-error 3-arg enpipeIf with boolean condition produces union of fn/fnElse return types
-		enpipeIf(
+	// @ts-expect-error pipeAsync lacks Awaited<U> — union of Promise<A> | B leaks un-flattened (see SrHenry/type-utils#50)
+			enpipeIf(
 			!options.noThumbnail,
 			fetchThumbnail(options.thumbnailsDir),
 			append({ thumbnail_file: null }),
@@ -108,7 +108,7 @@ const playlistPipeline: Pipeline = (options) => (source) =>
                     printProcessingEntry(i + 1, total, () =>
 		pipe(Promise.resolve({ yt_src, metadata: null }))
 			.pipeAsync(
-				// @ts-expect-error 3-arg enpipeIf with boolean condition produces union of fn/fnElse return types
+				// @ts-expect-error pipeAsync lacks Awaited<U> — union of Promise<A> | B leaks un-flattened (see SrHenry/type-utils#50)
 				enpipeIf(
 					!options.noThumbnail,
 					fetchThumbnail(options.thumbnailsDir),

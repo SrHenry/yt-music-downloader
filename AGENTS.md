@@ -250,11 +250,11 @@ Restore the main repo to its original branch if needed.
 | `asTypeGuard` + inline rules | `asTypeGuard` + `createInlineRule` + `.use()` on `useSchema()` | Split base guard from inline rules |
 | Type augmentation via `type-utils.d.ts` | Not needed | Module types exported directly |
 
-### Known local typing issues
+### Known upstream issues
 
 | Issue | Description | Workaround |
 |-------|-------------|------------|
-| 3-arg `enpipeIf` with boolean condition | When both `fn` and `fnElse` branches produce different return types, the union is incompatible with `pipeAsync`'s expected single-type signature | `@ts-expect-error` — 2-arg boolean form is already fixed (returns `TNewChained` only) |
+| [SrHenry/type-utils#50](https://github.com/SrHenry/type-utils/issues/50) | `pipeAsync` captures `U` verbatim in `AsyncPipelineBox<U>` instead of `AsyncPipelineBox<Awaited<U>>` — unions like `Promise<A> \| B` leak un-flattened | `@ts-expect-error` on `pipeAsync` calls that receive functions returning sync/async unions |
 
 ### PipelineBox API reference
 
