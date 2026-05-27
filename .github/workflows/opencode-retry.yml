@@ -29,7 +29,7 @@ jobs:
         persist-credentials: ${{ inputs.persist-credentials }}
 
     - name: Run OpenCode (attempt ${{ github.run_attempt }}/${{ inputs.max-attempts }})
-      uses: anomalyco/opencode/github@v1.15.10
+      uses: anomalyco/opencode/github@v1.15.11
       env:
         NVIDIA_API_KEY: ${{ secrets.NVIDIA_AI_API_KEY }}
       with:
