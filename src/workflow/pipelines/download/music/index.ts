@@ -41,8 +41,7 @@ const parseOptions = (options?: DownloadOptions | null): RequiredOptions =>
     options
         ? pipe(options)
             .pipe(apply(fillNullables, DefaultOptions))
-            // TODO: Remove explicit type param once arrayToObject overloads infer through pipeline (see SrHenry/type-utils#39)
-            .pipe((s) => helpers.arrayToObject<RequiredOptions>(s))
+		.pipe((s) => helpers.arrayToObject(s))
             .depipe()
         : DefaultOptions;
 
@@ -75,10 +74,9 @@ const musicPipeline: Pipeline = (options) => (source) =>
             if (options.thumbnailsDir)
                 await execFile("mkdir", "-p", options.thumbnailsDir);
         })
-        .pipeAsync(
-            // TODO: Remove @ts-expect-error once enpipeIf union return type is compatible with pipeAsync signature
-            // @ts-expect-error
-            enpipeIf(
+	.pipeAsync(
+		// @ts-expect-error enpipeIf union return type is incompatible with pipeAsync signature
+		enpipeIf(
                 !options.noThumbnail,
                 fetchThumbnail(options.thumbnailsDir),
                 append({ thumbnail_file: null }),
@@ -110,19 +108,17 @@ const playlistPipeline: Pipeline = (options) => (source) =>
                 ({ id: yt_src }, _, i, total) =>
                     printProcessingEntry(i + 1, total, () =>
             pipe(Promise.resolve({ yt_src, metadata: null }))
-                .pipeAsync(
-                    // TODO: Remove @ts-expect-error once enpipeIf union return type is compatible with pipeAsync signature
-                    // @ts-expect-error
-                    enpipeIf(
+			.pipeAsync(
+				// @ts-expect-error enpipeIf union return type is incompatible with pipeAsync signature
+				enpipeIf(
                         !options.noThumbnail,
                         fetchThumbnail(options.thumbnailsDir),
                         append({ thumbnail_file: null }),
                     ),
                 )
                 .pipeAsync(fetchMusic(parseFetchArgs(options)))
-                .pipeAsync(
-                    // TODO: Remove cast once enpipeIf union return type is compatible with pipeAsync signature
-                    enpipeIf(
+			.pipeAsync(
+				enpipeIf(
                         !options.noThumbnail,
                         embedThumbnail(),
                     ),

@@ -11,7 +11,6 @@ import { ProcessError } from "@/shared/errors/ProcessError.ts";
 import { logProcess } from "@/shared/pipelines/logProcess.ts";
 import { logProcessError } from "@/shared/pipelines/logProcessError.ts";
 import { YouTubeMusicMetadataSchema } from "@/workflow/pipelines/download/music/schemas/YouTubeMusicMetadataSchema.ts";
-import type { YouTubeMusicMetadata } from "@/workflow/pipelines/download/music/types/YouTubeMusicMetadata.ts";
 import { ValidationErrors } from "@srhenry/type-utils";
 
 const { validate: validateMetadata } = YouTubeMusicMetadataSchema().validator();
@@ -27,8 +26,7 @@ export const fetchMetadata: StepFactory<[Input, Output], Initializer> =
                 source,
             );
 
-            // TODO: Remove cast once Infer<FluentSchema<T[], ...>> resolves correctly (see SrHenry/type-utils#39)
-        const metadata = await getMetadata(source).then(validateMetadata) as YouTubeMusicMetadata;
+	const metadata = await getMetadata(source).then(validateMetadata);
 
             console.log(`Content ID: ${metadata.id}`);
             console.log();

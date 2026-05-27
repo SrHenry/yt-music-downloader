@@ -238,10 +238,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@srhenry/type-utils@0.8.1":
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/@srhenry/type-utils/-/type-utils-0.8.1.tgz#16a1326809f08cf9f62efa97f671b7bbd3f68114"
-  integrity sha512-YOI/ijaCw1/t7SbtKGyRIvyS78KQw7S60hhbGI9KvZaE1AIlAySJdLsleFqEynYnuMxiOCLMRRDICfVZgq1XYw==
+"@srhenry/type-utils@^0.8.2":
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/@srhenry/type-utils/-/type-utils-0.8.2.tgz#ba88fcbb34fb4b47658892097559e3c6887aa601"
+  integrity sha512-wNtXhyV0NByh+ANxGdtTU7CJo2e5/WcNM/M1/c/A1qY4Sh8BN+fhay3y6Tg+zy15AgmOjApAj0u0c0dJ266gzg==
 
 "@swc/core-darwin-arm64@1.15.33":
   version "1.15.33"

@@ -10,8 +10,7 @@ export const unaryFn = <TParam = any, TReturn = any>() => {
         },
     );
 
-    // TODO: Provide both type params as workaround — named overload unreachable with TSubject only (see SrHenry/type-utils#40)
-    const hasParamLength = createInlineRule<Fn1<TParam, TReturn>, "hasParamLength">(
+	const hasParamLength = createInlineRule<Fn1<TParam, TReturn>>(
         "hasParamLength",
         (value) => value.length === 1,
     );

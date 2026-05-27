@@ -28,8 +28,7 @@ export function func(...params: number[]) {
         },
     );
 
-    // TODO: Provide both type params as workaround — named overload unreachable with TSubject only (see SrHenry/type-utils#40)
-    const hasParamLength = createInlineRule<Fn<any[], any>, "hasParamLength">(
+	const hasParamLength = createInlineRule<Fn<any[], any>>(
         "hasParamLength",
         (value) => params.some((p) => p === value.length),
     );

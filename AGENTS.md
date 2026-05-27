@@ -250,13 +250,10 @@ Restore the main repo to its original branch if needed.
 | `asTypeGuard` + inline rules | `asTypeGuard` + `createInlineRule` + `.use()` on `useSchema()` | Split base guard from inline rules |
 | Type augmentation via `type-utils.d.ts` | Not needed | Module types exported directly |
 
-### Known upstream issues
+### Known local typing issues
 
 | Issue | Description | Workaround |
 |-------|-------------|------------|
-| [SrHenry/type-utils#39](https://github.com/SrHenry/type-utils/issues/39) | `Infer<FluentSchema<T[], ...>>` resolves to `{}[]` instead of `T[]` | `Omit<Inferred, "field"> & { field: T[] }` override + `as` casts |
-| [SrHenry/type-utils#40](https://github.com/SrHenry/type-utils/issues/40) | `createInlineRule` named overload unreachable when only `TSubject` provided | Provide both type params: `createInlineRule<TSubject, "ruleName">("ruleName", pred)` |
-| [SrHenry/type-utils#41](https://github.com/SrHenry/type-utils/issues/41) | `ValidatorMap<T>` requires all keys including optional ones | Remove explicit type params from `object({...})` calls |
 | `enpipeIf` union return vs `pipeAsync` | `enpipeIf` returns `Fn1<Input, Output | (Input & {...})>` — union type incompatible with `pipeAsync` signature | `@ts-expect-error` on the `enpipeIf` call inside `.pipeAsync()` |
 
 ### PipelineBox API reference

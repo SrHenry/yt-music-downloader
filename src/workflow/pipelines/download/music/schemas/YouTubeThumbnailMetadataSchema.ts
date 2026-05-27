@@ -1,8 +1,7 @@
 import { number, object, string } from "@srhenry/type-utils";
 
 export const YouTubeThumbnailMetadataSchema = () =>
-    // TODO: Removed explicit <Thumbnail> type param — ValidatorMap requires all keys including optional (see SrHenry/type-utils#41)
-    object({
+	object<Thumbnail>({
         id: string(),
         url: string().url(),
 
