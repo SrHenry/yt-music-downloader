@@ -1,4 +1,4 @@
-import { Experimental, helpers } from "@srhenry/type-utils";
+import { Experimental, helpers, type Fn1 } from "@srhenry/type-utils";
 const { pipe, apply, callWith, pipeline } = Experimental;
 
 import chalk from "chalk";
@@ -16,7 +16,22 @@ import { fetchMetadata } from "@/workflow/pipelines/download/music/pipeline/step
 import { fetchMusic } from "@/workflow/pipelines/download/music/pipeline/steps/fetchMusic/index.ts";
 import { fetchPlaylistContentList } from "@/workflow/pipelines/download/music/pipeline/steps/fetchPlaylistContentList/index.ts";
 import { fetchThumbnail } from "@/workflow/pipelines/download/music/pipeline/steps/fetchTumbnail/index.ts";
+import type { Input, Output } from "@/workflow/pipelines/download/music/pipeline/steps/fetchTumbnail/types/index.ts";
 import { finish } from "@/workflow/pipelines/download/music/pipeline/steps/finish/index.ts";
+
+/**
+ * Narrows the `enpipeIf` return type at the `fetchThumbnail` call site.
+ *
+ * `enpipeIf` with an else-branch (`append({ thumbnail_file: null })`) produces
+ * a union where `thumbnail_file` is `string | null`, but its 3-arg overload
+ * cannot express that — it returns `TNewChained | TNewChainedElse` which
+ * collapses to a full-type union. This alias overrides `thumbnail_file` to the
+ * honest `string | null` so downstream steps receive the correct type.
+ */
+type FetchThumbnailStep = Fn1<
+    Input,
+    Promise<Omit<Output, "thumbnail_file"> & { thumbnail_file: string | null }>
+>;
 
 type RequiredOptions = Requirefy<DownloadOptions>;
 type Pipeline = (options: RequiredOptions) => (source: string) => Promise<void>;
@@ -79,7 +94,7 @@ const musicPipeline: Pipeline = (options) => (source) =>
 			!options.noThumbnail,
 			fetchThumbnail(options.thumbnailsDir),
 			append({ thumbnail_file: null }),
-		) as ReturnType<typeof fetchThumbnail>,
+		) as FetchThumbnailStep,
 	)
 	.tapAsync(async (_) => {
 		if (options.outputDir)
@@ -111,7 +126,7 @@ const playlistPipeline: Pipeline = (options) => (source) =>
 					!options.noThumbnail,
 					fetchThumbnail(options.thumbnailsDir),
 					append({ thumbnail_file: null }),
-				) as ReturnType<typeof fetchThumbnail>,
+				) as FetchThumbnailStep,
 			)
 			.pipeAsync(fetchMusic(parseFetchArgs(options)))
 			.pipeAsync(
