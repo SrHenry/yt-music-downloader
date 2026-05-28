@@ -1,7 +1,7 @@
 import { number, object, string } from "@srhenry/type-utils";
 
 export const YouTubeThumbnailMetadataSchema = () =>
-    object<Thumbnail>({
+	object<Thumbnail>({
         id: string(),
         url: string().url(),
 

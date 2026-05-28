@@ -7,7 +7,6 @@ import { countSucessfullyRemoved } from "@/commands/_shared/pipelines/countSuces
 import { validate } from "@/commands/clear/music/pipelines/Options/validate.ts";
 import { OptionsSchema } from "@/commands/clear/music/schemas/Options.ts";
 import { extractFullPath } from "@/shared/functions/extractFullPath.ts";
-import { $do } from "@/shared/pipelines/do.ts";
 import { listDir } from "@/shared/pipelines/listDir.ts";
 import { logExceptions } from "@/shared/pipelines/logExceptions.ts";
 import { printMessage } from "@/shared/pipelines/printMessage.ts";
@@ -45,9 +44,9 @@ export const clearMusic = () => (filter: Predicate<Dirent>) =>
         .pipe(listDir({ recursive: false }))
         .pipeAsync(useFilters([filter]))
         .pipeAsync(getPaths())
-        .pipeAsync(removeFiles())
-        .pipeAsync($do(logExceptions<any>("Error while deleting files: %s")))
-        .pipeAsync(countSucessfullyRemoved())
+    .pipeAsync(removeFiles())
+    .tapAsync(logExceptions<any>("Error while deleting files: %s"))
+    .pipeAsync(countSucessfullyRemoved())
         .pipeAsync(printMessage("Removed :{count} music files.")<[number]>)
         .depipe();
 

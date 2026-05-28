@@ -11,7 +11,7 @@ import { append } from "@/shared/pipelines/append.ts";
 import { transform } from "@/shared/pipelines/transform.ts";
 import { Experimental } from "@srhenry/type-utils";
 
-const { pipe, enpipe } = Experimental;
+const { pipe, callWith } = Experimental;
 
 export async function downloadAction(
     sources: string[],
@@ -20,10 +20,9 @@ export async function downloadAction(
     _extraArgs: string[],
 ) {
     await pipe(validate)
-        .pipe(enpipe(options))
+        .pipe(callWith(options))
         .pipe(append({ ytDlpArgs: fetchExtraArgs() }))
         .pipe(mapToPipelineOptions)
-        // .pipe($do<DownloadOptions>(console.log.bind(null, "\nOptions:")))
         .pipe(
             transform(
                 (options) =>
@@ -34,5 +33,6 @@ export async function downloadAction(
             ),
         )
         .pipe(([sources, options]) => processDownload(sources, options))
+        .depipe()
         .then(() => console.log(chalk.green("All done!")));
 }

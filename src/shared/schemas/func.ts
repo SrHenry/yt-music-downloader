@@ -1,5 +1,5 @@
 import type { Fn, TupleTools, TypeGuard } from "@srhenry/type-utils";
-import { asTypeGuard, helpers, useSchema } from "@srhenry/type-utils";
+import { asTypeGuard, createInlineRule, helpers, useSchema } from "@srhenry/type-utils";
 
 type MapFuncGuards<TParams extends [...number[]]> = TParams extends [
     infer T extends number,
@@ -21,17 +21,17 @@ export function func<TParams extends [...any[]] = [], TReturn = any>(
 ): TypeGuard<Fn<TParams, any>>;
 
 export function func(...params: number[]) {
-    return useSchema(
-        asTypeGuard<Fn<any[], any>>(
-            (value) =>
-                helpers.isFunction(value) &&
-                params.some((p) => p === value.length),
-            {
-                kind: "function",
-                context: {
-                    acceptedParamLengths: params,
-                },
-            },
-        ),
+    const baseGuard = asTypeGuard<Fn<any[], any>>(
+        (value) => helpers.isFunction(value),
+        {
+            kind: "function",
+        },
     );
+
+	const hasParamLength = createInlineRule<Fn<any[], any>>(
+        "hasParamLength",
+        (value) => params.some((p) => p === value.length),
+    );
+
+    return useSchema(baseGuard).use(hasParamLength);
 }

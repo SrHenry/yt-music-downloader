@@ -343,7 +343,7 @@ Restore the main repo to its original branch if needed.
 
 - `src/functions/` — thin wrappers calling `yt-dlp`/`ffmpeg` via `execFile`
 - `src/shared/` — generic utilities (exec helpers, pipeline operators, schemas)
-- `src/shared/pipelines/` — custom functional pipeline library (map, filter, forEach, split, removeFiles, etc.)
+- `src/shared/pipelines/` — custom functional pipeline library (map, filter, forEach, split, removeFiles, parseValidationResult, etc.)
 - `src/commands/` — commander subcommand definitions with per-command schemas/validators
 - `src/env/` — dotenv loading + schema validation
 - `src/log/` — namespaced debug loggers
@@ -357,3 +357,31 @@ Restore the main repo to its original branch if needed.
 - `runFFmpeg()` catches errors and returns `err.message` as a successful string instead of throwing — callers that expect a throw on failure will miss ffmpeg errors.
 - `processDownload()` returns after the first source in non-playlist mode (it does not iterate all sources) — passing multiple URLs without `--playlist` only processes the first one.
 - The autoload regex (`/^__autoload\.[cm]?js$/g`) matches `.js`, `.cjs`, `.mjs` but **not** `.ts` — yet the project uses `.ts` autoload files. This works because `tsx` resolves `.ts` to `.js` at runtime, but a new autoload file with a non-standard extension could silently fail to load.
+- `src/shared/pipelines/do.ts` was deleted in the 0.8.x migration — `$do`/`$doAsync` are replaced by `.tap()`/`.tapAsync()` instance methods on PipelineBox.
+- `src/@types/type-utils.d.ts` was deleted in the 0.8.x migration — type augmentation is no longer needed; `@srhenry/type-utils` exports types directly.
+
+## @srhenry/type-utils API (0.8.x)
+
+### Migration from 0.7.x
+
+| Old API | New API (0.8.x) | Notes |
+|---------|-----------------|-------|
+| `enpipe(value)` | `callWith(value)` | PipelineBox auto-invokes |
+| `enpipe(fn, ...args)` | `apply(fn, ...args)` | PipelineBox auto-invokes |
+| `$do(fn)` / `$doAsync(fn)` | `.tap(fn)` / `.tapAsync(fn)` | Instance methods on PipelineBox |
+| `.catch(fn)` on PipelineBox | `.depipe().catch(fn)` | PipelineBox no longer has `.catch()` |
+| `.then(fn)` on PipelineBox | `.depipe().then(fn)` | PipelineBox no longer has `.then()` |
+| `asTypeGuard` + inline rules | `asTypeGuard` + `createInlineRule` + `.use()` on `useSchema()` | Split base guard from inline rules |
+| Type augmentation via `type-utils.d.ts` | Not needed | Module types exported directly |
+
+### PipelineBox API reference
+
+- `pipe(value)` / `pipe(Promise.resolve(value))` — wraps value or promise
+- `.pipe(fn)` / `.pipeAsync(fn)` — chains sync/async transforms
+- `.tap(fn)` / `.tapAsync(fn)` — side-effect without modifying pipeline value
+- `.depipe()` — unwraps PipelineBox to its inner Promise/value
+- `callWith(value)` — auto-invoked by PipelineBox (replaces `enpipe`)
+- `apply(fn, ...args)` — auto-invoked by PipelineBox (replaces `enpipe` with args)
+- `pipeline(fn)` — wraps a factory function for PipelineBox composition
+- `createInlineRule<TSubject, "name">("name", predicate)` — creates a named rule for `.use()` on `FluentSchema`
+- `useSchema(guard)` — wraps a TypeGuard into a FluentSchema for `.use()` chaining
