@@ -9,7 +9,7 @@ import {
     match,
 } from "@srhenry/type-utils";
 
-export function parseValidationResult<T, E extends ValidationError<any, any, string, any, any> = ValidationError<unknown, T>>() {
+export function parseValidationResult<T, E extends ValidationError<any, any> = ValidationError<unknown, T>>() {
     return match<GetValidatorReturn<T>>()
         .with(
             isInstanceOf(ValidationErrors),
@@ -17,5 +17,3 @@ export function parseValidationResult<T, E extends ValidationError<any, any, str
         )
         .default<SucessfulResult<T>>((r) => [null, r]).exec;
 }
-
-export type ParseValidationResultFn<T> = ReturnType<typeof parseValidationResult<T>>;
