@@ -8,9 +8,9 @@ export type Input =
       };
 
 export type Output = Prettify<
-    Input & {
-        thumbnail_file: string;
-    }
+	Input & {
+		thumbnail_file: string | null;
+	}
 >;
 
 export type Initializer = [thumbnailDir: string | null] | [];

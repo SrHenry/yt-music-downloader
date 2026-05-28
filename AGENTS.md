@@ -250,12 +250,6 @@ Restore the main repo to its original branch if needed.
 | `asTypeGuard` + inline rules | `asTypeGuard` + `createInlineRule` + `.use()` on `useSchema()` | Split base guard from inline rules |
 | Type augmentation via `type-utils.d.ts` | Not needed | Module types exported directly |
 
-### Known upstream issues
-
-| Issue | Description | Workaround |
-|-------|-------------|------------|
-| [SrHenry/type-utils#50](https://github.com/SrHenry/type-utils/issues/50) | `pipeAsync` captures `U` verbatim in `AsyncPipelineBox<U>` instead of `AsyncPipelineBox<Awaited<U>>` — unions like `Promise<A> \| B` leak un-flattened | `@ts-expect-error` on `pipeAsync` calls that receive functions returning sync/async unions |
-
 ### PipelineBox API reference
 
 - `pipe(value)` / `pipe(Promise.resolve(value))` — wraps value or promise

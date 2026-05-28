@@ -75,8 +75,7 @@ const musicPipeline: Pipeline = (options) => (source) =>
                 await execFile("mkdir", "-p", options.thumbnailsDir);
 	})
 	.pipeAsync(
-	// @ts-expect-error pipeAsync lacks Awaited<U> — union of Promise<A> | B leaks un-flattened (see SrHenry/type-utils#50)
-			enpipeIf(
+		enpipeIf(
 			!options.noThumbnail,
 			fetchThumbnail(options.thumbnailsDir),
 			append({ thumbnail_file: null }),
@@ -108,7 +107,6 @@ const playlistPipeline: Pipeline = (options) => (source) =>
                     printProcessingEntry(i + 1, total, () =>
 		pipe(Promise.resolve({ yt_src, metadata: null }))
 			.pipeAsync(
-				// @ts-expect-error pipeAsync lacks Awaited<U> — union of Promise<A> | B leaks un-flattened (see SrHenry/type-utils#50)
 				enpipeIf(
 					!options.noThumbnail,
 					fetchThumbnail(options.thumbnailsDir),
