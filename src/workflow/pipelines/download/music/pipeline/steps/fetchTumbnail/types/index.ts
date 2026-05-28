@@ -9,7 +9,7 @@ export type Input =
 
 export type Output = Prettify<
 	Input & {
-		thumbnail_file: string | null;
+		thumbnail_file: string;
 	}
 >;
 

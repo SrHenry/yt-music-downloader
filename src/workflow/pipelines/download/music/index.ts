@@ -79,7 +79,7 @@ const musicPipeline: Pipeline = (options) => (source) =>
 			!options.noThumbnail,
 			fetchThumbnail(options.thumbnailsDir),
 			append({ thumbnail_file: null }),
-		),
+		) as ReturnType<typeof fetchThumbnail>,
 	)
 	.tapAsync(async (_) => {
 		if (options.outputDir)
@@ -111,7 +111,7 @@ const playlistPipeline: Pipeline = (options) => (source) =>
 					!options.noThumbnail,
 					fetchThumbnail(options.thumbnailsDir),
 					append({ thumbnail_file: null }),
-				),
+				) as ReturnType<typeof fetchThumbnail>,
 			)
 			.pipeAsync(fetchMusic(parseFetchArgs(options)))
 			.pipeAsync(
