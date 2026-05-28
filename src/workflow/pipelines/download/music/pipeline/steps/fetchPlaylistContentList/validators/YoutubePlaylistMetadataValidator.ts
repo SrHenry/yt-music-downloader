@@ -10,7 +10,7 @@ import {
     ValidationErrors,
 } from "@srhenry/type-utils";
 
-const parseResult = parseValidationResult<YouTubePlaylistMetadata>();
+const parseResult = parseValidationResult<YouTubePlaylistMetadata, MetadataValidationError>();
 
 export const validateMetadata = (
     metadata: unknown,

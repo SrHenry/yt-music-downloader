@@ -26,7 +26,7 @@ export const fetchMetadata: StepFactory<[Input, Output], Initializer> =
                 source,
             );
 
-	const metadata = await getMetadata(source).then(validateMetadata);
+            const metadata = await getMetadata(source).then(validateMetadata);
 
             console.log(`Content ID: ${metadata.id}`);
             console.log();

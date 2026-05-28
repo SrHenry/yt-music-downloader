@@ -68,10 +68,10 @@ export async function fetchThumbnailIfNotExists(
         return path;
     }
 
-	return fetchThumbnail(
-		yt_src,
-		albumName,
-		thumbnailDir,
-		musicMetadata?.thumbnails ?? null,
-	);
+    return fetchThumbnail(
+        yt_src,
+        albumName,
+        thumbnailDir,
+        musicMetadata?.thumbnails ?? null,
+    );
 }

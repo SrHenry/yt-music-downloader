@@ -20,7 +20,7 @@ const MetadataSchema = () =>
 type Metadata = Infer<ReturnType<typeof MetadataSchema>>;
 type MetadataValidationError = ValidationError<unknown, Metadata>;
 
-const parseResult = parseValidationResult<Metadata>();
+const parseResult = parseValidationResult<Metadata, MetadataValidationError>();
 
 const validateMetadata = (
     metadata: unknown,
