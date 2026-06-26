@@ -23,7 +23,7 @@
         "@types/debug": "^4.1.13",
         "@types/node": "^26.0.1",
         "eslint": "^10.5.0",
-        "globals": "^17.6.0",
+        "globals": "^17.7.0",
         "run-script-os": "^1.1.6",
         "ts-node": "^10.9.2",
         "tsconfig-paths": "^4.2.0",
