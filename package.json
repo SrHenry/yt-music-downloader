@@ -21,7 +21,7 @@
         "@swc/core": "^1.15.33",
         "@swc/helpers": "^0.5.23",
         "@types/debug": "^4.1.13",
-        "@types/node": "^25.8.0",
+        "@types/node": "^26.0.1",
         "eslint": "^10.5.0",
         "globals": "^17.6.0",
         "run-script-os": "^1.1.6",
